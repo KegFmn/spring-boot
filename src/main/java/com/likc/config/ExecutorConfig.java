@@ -11,7 +11,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- *  多线程配置类
+ * @Author: likc
+ * @Date: 2022/01/04/23:28
+ * @Description: 多线程配置类
  */
 
 @EnableAsync

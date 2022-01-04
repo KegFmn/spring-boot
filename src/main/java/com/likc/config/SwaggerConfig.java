@@ -17,7 +17,7 @@ import java.util.ArrayList;
 /**
  * @Author: likc
  * @Date: 2022/01/04/23:28
- * @Description:
+ * @Description: Swagger3配置类
  */
 
 @EnableOpenApi
