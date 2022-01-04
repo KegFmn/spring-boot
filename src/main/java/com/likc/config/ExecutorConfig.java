@@ -13,8 +13,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  *  多线程配置类
  */
-@Configuration
+
 @EnableAsync
+@Configuration
 public class ExecutorConfig {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

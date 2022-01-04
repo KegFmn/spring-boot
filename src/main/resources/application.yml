@@ -2,6 +2,8 @@ server:
   port: 8082
 
 spring:
+  application:
+    name: springfox-swagger
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/templateboot?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
@@ -9,6 +11,8 @@ spring:
     password: root
   mvc:
     pathmatch:
-      matching-strategy: ant_path_matcher #请求路径与Spring MVC 处理映射匹配的默认策略已从AntPathMatcher更改为PathPatternParser(解决springfox报错)
+      matching-strategy: ant_path_matcher #请求路径与SpringMVC处理映射匹配的默认策略已从AntPathMatcher更改为PathPatternParser(解决springfox空指针报错)
+
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml
+
