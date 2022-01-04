@@ -1,4 +1,4 @@
-package com.likc.templateboot.po;
+package com.likc.po;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -18,7 +18,7 @@ import lombok.Setter;
  * </p>
  *
  * @author likc
- * @since 2021-12-27
+ * @since 2022-01-04
  */
 @Getter
 @Setter

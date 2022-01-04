@@ -1,4 +1,4 @@
-package com.likc.templateboot;
+package com.likc;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -24,8 +24,8 @@ public class MybatisGenerator {
                         .outputDir(System.getProperty("user.dir") + "/src/main/java"); // 指定输出目录
             })
             .packageConfig(builder -> {
-                builder.parent("com.likc") // 设置父包名
-                        .moduleName("templateboot")  //设置模块包名
+                builder.parent("com") // 设置父包名
+                        .moduleName("likc")  //设置模块包名
                         .entity("po")   //pojo 实体类包名
                         .service("service") //Service 包名
                         .serviceImpl("service.impl") // ***ServiceImpl 包名

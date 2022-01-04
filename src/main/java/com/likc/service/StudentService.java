@@ -1,6 +1,6 @@
-package com.likc.templateboot.service;
+package com.likc.service;
 
-import com.likc.templateboot.po.Student;
+import com.likc.po.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author likc
- * @since 2021-12-27
+ * @since 2022-01-04
  */
 public interface StudentService extends IService<Student> {
 

@@ -1,8 +1,8 @@
-package com.likc.templateboot.service.impl;
+package com.likc.service.impl;
 
-import com.likc.templateboot.po.Student;
-import com.likc.templateboot.mapper.StudentMapper;
-import com.likc.templateboot.service.StudentService;
+import com.likc.po.Student;
+import com.likc.mapper.StudentMapper;
+import com.likc.service.StudentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author likc
- * @since 2021-12-27
+ * @since 2022-01-04
  */
 @Service
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {

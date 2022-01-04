@@ -1,4 +1,4 @@
-package com.likc.templateboot.controller;
+package com.likc.controller;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author likc
- * @since 2021-12-27
+ * @since 2022-01-04
  */
 @RestController
-@RequestMapping("/templateboot/student")
+@RequestMapping("/likc/student")
 public class StudentController {
 
 }

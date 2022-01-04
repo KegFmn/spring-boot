@@ -1,6 +1,6 @@
-package com.likc.templateboot.mapper;
+package com.likc.mapper;
 
-import com.likc.templateboot.po.Student;
+import com.likc.po.Student;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author likc
- * @since 2021-12-27
+ * @since 2022-01-04
  */
 @Mapper
 public interface StudentMapper extends BaseMapper<Student> {
