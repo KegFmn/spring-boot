@@ -29,6 +29,11 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+        <!-- websocket-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
         <!-- mysql-->
         <dependency>
             <groupId>mysql</groupId>
