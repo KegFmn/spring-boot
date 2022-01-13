@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * 运行时异常比如：空指针、类型转换、数组下标越界
+     * @param e
+     * @return
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = RuntimeException.class)
      public Result handler(RuntimeException e){
@@ -22,6 +27,24 @@ public class GlobalExceptionHandler {
          return Result.fail(e.getMessage());
      }
 
+    /**
+     *  Assert断言异常
+     * @param e
+     * @return
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public Result handler(IllegalArgumentException e){
+        log.error("Assert异常: ======================={}",e);
+        return Result.fail(e.getMessage());
+    }
+
+
+    /**
+     * 搭配@Validated和Valid校验前端参数
+     * @param e
+     * @return
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public Result handler(MethodArgumentNotValidException e){
