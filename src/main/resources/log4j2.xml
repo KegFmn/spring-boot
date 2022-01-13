@@ -33,7 +33,7 @@
 					之后的封存时间依次为08:00，12:00，16:00
 				-->
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-                <SizeBasedTriggeringPolicy size="10MB"/>
+                <SizeBasedTriggeringPolicy size="100MB"/>
             </Policies>
             <!-- 最多保留文件数 -->
             <DefaultRolloverStrategy max="365"/>
