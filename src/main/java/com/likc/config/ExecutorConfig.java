@@ -1,7 +1,6 @@
 package com.likc.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -16,10 +15,10 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @Description: 多线程配置类
  */
 
+@Slf4j
 @EnableAsync
 @Configuration
 public class ExecutorConfig {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final int COREPOOLSIZE = 5;
     private static final int MAXPOOLSIZE = 10;
@@ -29,7 +28,7 @@ public class ExecutorConfig {
 
     @Bean("Executor")
     public Executor asyncServiceExecutor() {
-        logger.info("------线程池开启------");
+        log.info("------线程池开启------");
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         // 设置核心线程数
         executor.setCorePoolSize(COREPOOLSIZE);

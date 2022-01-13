@@ -18,8 +18,8 @@ public class WebSocketController {
      */
     @RequestMapping("/socket/push/{cid}")
     public Result pushToOne(@PathVariable String cid, String message) throws IOException {
-            WebSocketServer.sendInfo(message, cid);
-            return Result.succ(null);
+        WebSocketServer.sendInfo(message, cid);
+        return Result.succ(null);
     }
 
     /**

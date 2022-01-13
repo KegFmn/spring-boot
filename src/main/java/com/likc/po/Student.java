@@ -29,7 +29,7 @@ public class Student {
     @ApiModelProperty("主键")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-
+    
     @ApiModelProperty("名字")
     @TableField("name")
     private String name;
