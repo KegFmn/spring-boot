@@ -12,6 +12,8 @@
     <Appenders>
         <!--输出控制台的配置-->
         <Console name="Console" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
             <!-- 输出日志的格式-->
             <PatternLayout pattern="${LOG_PATTERN}"/>
         </Console>
@@ -19,6 +21,8 @@
         <!--输出日志到文件的配置，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面-->
         <RollingFile name="RollingFile" fileName="${LOG_HOME}/${FILE_NAME}.log"
                      filePattern="${LOG_HOME}/$${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
             <!-- 输出日志的格式-->
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
