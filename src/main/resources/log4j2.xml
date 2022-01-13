@@ -32,7 +32,7 @@
 					则封存时间将以0点为边界进行偏移计算。比如，modulate=true，interval=4hours， 那么假设上次封存日志的时间为03:00，则下次封存日志的时间为04:00，
 					之后的封存时间依次为08:00，12:00，16:00
 				-->
-                <TimeBasedTriggeringPolicy interval="1" />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
                 <SizeBasedTriggeringPolicy size="10MB"/>
             </Policies>
             <!-- 最多保留文件数 -->
