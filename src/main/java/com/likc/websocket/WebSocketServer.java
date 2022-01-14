@@ -2,10 +2,13 @@ package com.likc.websocket;
 
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -19,6 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @ServerEndpoint("/imserver/{userId}")
 public class WebSocketServer {
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
     // 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的
@@ -81,18 +87,19 @@ public class WebSocketServer {
         //消息保存到数据库、redis
         if(StringUtils.isNotBlank(message)){
             try {
-                ////解析发送的报文
-                //JSONObject jsonObject = JSONUtil.parseObj(message, false, true);
-                ////追加发送人(防止串改)
-                //jsonObject.put("fromUserId", this.userId);
-                //String toUserId=jsonObject.getStr("toUserId");
-                ////传送给对应toUserId用户的websocket
-                //if(StringUtils.isNotBlank(toUserId)&&webSocketMap.containsKey(toUserId)){
-                //    webSocketMap.get(toUserId).sendMessage(JSONUtil.toJsonStr(jsonObject));
-                //}else{
-                //    log.error("请求的userId:"+toUserId+"不在该服务器上");
-                //    //否则不在这个服务器上，发送到mysql或者redis
-                //}
+                // 解析发送的报文
+                JsonNode jsonNode = objectMapper.readTree(message);
+                // 追加发送人(防止串改)
+                ((ObjectNode)jsonNode).put("fromUserId",this.userId);
+                // 获取发给谁
+                String toUserId = ((ObjectNode)jsonNode).get("toUserId").toString();
+                //传送给对应toUserId用户的websocket
+                if(StringUtils.isNotBlank(toUserId)&&webSocketMap.containsKey(toUserId)){
+                    webSocketMap.get(toUserId).sendMessage(objectMapper.writeValueAsString(((ObjectNode)jsonNode)));
+                }else{
+                    log.error("请求的userId:"+toUserId+"不在该服务器上");
+                    //否则不在这个服务器上，发送到mysql或者redis
+                }
             }catch (Exception e){
                 e.printStackTrace();
             }
