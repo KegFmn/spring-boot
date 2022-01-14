@@ -1,11 +1,11 @@
 package com.likc.websocket;
 
 
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.sun.org.apache.bcel.internal.generic.NEW;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -15,12 +15,11 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
+@Slf4j
 @Component
 @ServerEndpoint("/imserver/{userId}")
 public class WebSocketServer {
 
-    private static Logger logger = LoggerFactory.getLogger(WebSocketServer.class);
 
     // 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的
     private static int onlineCount = 0;
@@ -49,12 +48,12 @@ public class WebSocketServer {
             //在线数加1
         }
 
-        logger.info("用户连接:"+userId+",当前在线人数为:" + getOnlineCount());
+        log.info("用户连接:"+userId+",当前在线人数为:" + getOnlineCount());
 
         try {
             sendMessage("连接成功");
         } catch (IOException e) {
-            logger.error("用户:"+userId+",网络异常!!!!!!");
+            log.error("用户:"+userId+",网络异常!!!!!!");
         }
     }
 
@@ -68,7 +67,7 @@ public class WebSocketServer {
             //从set中删除
             subOnlineCount();
         }
-        logger.info("用户退出:"+userId+",当前在线人数为:" + getOnlineCount());
+        log.info("用户退出:"+userId+",当前在线人数为:" + getOnlineCount());
     }
 
     /**
@@ -82,18 +81,18 @@ public class WebSocketServer {
         //消息保存到数据库、redis
         if(StringUtils.isNotBlank(message)){
             try {
-                //解析发送的报文
-                JSONObject jsonObject = JSONUtil.parseObj(message, false, true);
-                //追加发送人(防止串改)
-                jsonObject.put("fromUserId", this.userId);
-                String toUserId=jsonObject.getStr("toUserId");
-                //传送给对应toUserId用户的websocket
-                if(StringUtils.isNotBlank(toUserId)&&webSocketMap.containsKey(toUserId)){
-                    webSocketMap.get(toUserId).sendMessage(JSONUtil.toJsonStr(jsonObject));
-                }else{
-                    logger.error("请求的userId:"+toUserId+"不在该服务器上");
-                    //否则不在这个服务器上，发送到mysql或者redis
-                }
+                ////解析发送的报文
+                //JSONObject jsonObject = JSONUtil.parseObj(message, false, true);
+                ////追加发送人(防止串改)
+                //jsonObject.put("fromUserId", this.userId);
+                //String toUserId=jsonObject.getStr("toUserId");
+                ////传送给对应toUserId用户的websocket
+                //if(StringUtils.isNotBlank(toUserId)&&webSocketMap.containsKey(toUserId)){
+                //    webSocketMap.get(toUserId).sendMessage(JSONUtil.toJsonStr(jsonObject));
+                //}else{
+                //    log.error("请求的userId:"+toUserId+"不在该服务器上");
+                //    //否则不在这个服务器上，发送到mysql或者redis
+                //}
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -107,7 +106,7 @@ public class WebSocketServer {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        logger.error("用户错误:"+this.userId+",原因:"+error.getMessage());
+        log.error("用户错误:"+this.userId+",原因:"+error.getMessage());
         error.printStackTrace();
     }
     /**
@@ -126,7 +125,7 @@ public class WebSocketServer {
         if(StringUtils.isNotBlank(userId)&&webSocketMap.containsKey(userId)){
             webSocketMap.get(userId).sendMessage(message);
         }else{
-            logger.error("用户"+userId+",不在线！");
+            log.error("用户"+userId+",不在线！");
         }
     }
 
