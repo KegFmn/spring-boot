@@ -7,7 +7,7 @@
         <!-- 声明日志文件存储的目录 -->
         <Property name="LOG_HOME" value="logs" />
         <Property name="FILE_NAME" value="log" />
-        <Property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level [%logger{36}] - %msg%n" />
+        <Property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} -%-5p [%t]  %logger{36} : %msg%n" />
     </Properties>
     <Appenders>
         <!--输出控制台的配置-->
