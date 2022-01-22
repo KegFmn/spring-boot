@@ -17,6 +17,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Component
@@ -27,8 +28,8 @@ public class WebSocketServer {
     private ObjectMapper objectMapper;
 
     // 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的
-    private static int onlineCount = 0;
-    // concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象
+    private static AtomicInteger onlineCount = new AtomicInteger();
+    // concurrent包的线程安全Set，用来存放每个客户端对应的WebSocketServer对象
     private static ConcurrentHashMap<String, WebSocketServer> webSocketMap = new ConcurrentHashMap<>();
     // 与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
@@ -53,7 +54,7 @@ public class WebSocketServer {
             //在线数加1
         }
 
-        log.info("用户连接:"+userId+",当前在线人数为:" + getOnlineCount());
+        log.info("用户连接:"+userId+",当前在线人数为:" + onlineCount);
 
         try {
             sendMessage("连接成功");
@@ -72,7 +73,7 @@ public class WebSocketServer {
             //从set中删除
             subOnlineCount();
         }
-        log.info("用户退出:"+userId+",当前在线人数为:" + getOnlineCount());
+        log.info("用户退出:"+userId+",当前在线人数为:" + onlineCount);
     }
 
     /**
@@ -144,15 +145,12 @@ public class WebSocketServer {
         }
     }
 
-    public static synchronized int getOnlineCount() {
-        return onlineCount;
+
+    public static void addOnlineCount() {
+        onlineCount.incrementAndGet();
     }
 
-    public static synchronized void addOnlineCount() {
-        WebSocketServer.onlineCount++;
-    }
-
-    public static synchronized void subOnlineCount() {
-        WebSocketServer.onlineCount--;
+    public static void subOnlineCount() {
+        onlineCount.decrementAndGet();
     }
 }
