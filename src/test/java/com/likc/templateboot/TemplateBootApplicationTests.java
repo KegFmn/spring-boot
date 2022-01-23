@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashMap;
+
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // websocket测试必加，因为需要真实的tomcat
 class TemplateBootApplicationTests {
@@ -43,5 +45,46 @@ class TemplateBootApplicationTests {
         String toUserId = ((ObjectNode)jsonNode).get("firstname").toString();
         System.out.println(toUserId);
         System.out.println(objectMapper.writeValueAsString(((ObjectNode)jsonNode)));
+    }
+
+    @Test
+    void study() {
+
+        /*两数之和等于target，返回两数数组下标*/
+        //static {
+        //    int [] nums = new int[]{1,2,3,4};
+        //    int target = 5;
+        //    HashMap<Integer, Integer> hashMap = new HashMap<>();
+        //    for(int i = 0; i< nums.length; i++) {
+        //        if (hashMap.containsKey(target - nums[i])) {
+        //            System.out.println((new int[]{hashMap.get(target-nums[i]), i}).toString());
+        //            break;
+        //        }
+        //        hashMap.put(nums[i], i);
+        //    }
+        //}
+
+        /*回文数，判断返回boolen*/
+        //static {
+        //    int x = 121;
+        //
+        //    if (x < 0 || (x % 10 == 0 && x != 0)) {
+        //        System.out.println(false);
+        //        return;
+        //    }
+        //
+        //    int reverseNumber = 0;
+        //    while (x > reverseNumber) {
+        //        reverseNumber = reverseNumber * 10 + x % 10;
+        //        x /= 10;
+        //    }
+        //
+        //    System.out.println(x == reverseNumber || x == reverseNumber / 10); //revertedNumber/10 是为了去除奇数的中位数
+        //    return;
+        //}
+
+
+
+
     }
 }
