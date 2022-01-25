@@ -83,8 +83,53 @@ class TemplateBootApplicationTests {
         //    return;
         //}
 
+        /*罗马数字转整数*/
+        //static {
+        //    HashMap<Character, Integer> hashMap = new HashMap<>();
+        //    hashMap.put('I', 1);
+        //    hashMap.put('V', 5);
+        //    hashMap.put('X', 10);
+        //    hashMap.put('L', 50);
+        //    hashMap.put('C', 100);
+        //    hashMap.put('D', 500);
+        //    hashMap.put('M', 1000);
+        //
+        //    String str = "XLI";
+        //    int n = str.length();
+        //    int res = 0;
+        //
+        //    for (int i = 0; i < n; i++) {
+        //        int value = hashMap.get(str.charAt(i));
+        //        if (i < n-1 && value < hashMap.get(str.charAt(i+1))) { // n-1是因为后面value判断要去下一个值，不加就越界了
+        //            res -= value;
+        //        }else {
+        //            res += value;
+        //        }
+        //    }
+        //    System.out.println(res);
+        //}
 
-
+        /*最长公共前缀*/
+        //static {
+        //    String[] strs = new String[]{"str11","str2","st"};
+        //
+        //    if (strs == null || strs.length == 0) {
+        //        System.out.println(" ");
+        //        return;
+        //    }
+        //
+        //    String prefix = strs[0];
+        //
+        //    for (int i = 1; i <strs.length; i++ ) {
+        //        int min = Math.min(prefix.length(), strs[i].length());
+        //        int index = 0;
+        //        while (index < min && prefix.charAt(index) == strs[i].charAt(index)) {
+        //            index++;
+        //        }
+        //        prefix = prefix.substring(0, index);
+        //    }
+        //    System.out.println(prefix);
+        //}
 
     }
 }
