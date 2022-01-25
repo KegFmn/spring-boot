@@ -12,6 +12,8 @@ spring:
       matching-strategy: ant_path_matcher #请求路径与SpringMVC处理映射匹配的默认策略已从AntPathMatcher更改为PathPatternParser(解决springfox空指针报错)
 
 mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath*:/mapper/**Mapper.xml
 
 logging:
