@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // websocket测试必加，因为需要真实的tomcat
@@ -130,6 +132,41 @@ class TemplateBootApplicationTests {
         //    }
         //    System.out.println(prefix);
         //}
+
+        /*有效的括号*/
+        //static {
+        //    String s = "{()";
+        //    int n = s.length();
+        //    if (n % 2 == 1) {
+        //        System.out.println("false");
+        //        return;
+        //    }
+        //
+        //    HashMap<Character, Character> hashMap = new HashMap<>();
+        //    hashMap.put(')','(');
+        //    hashMap.put('}','{');
+        //    hashMap.put(']','[');
+        //
+        //    Deque<Character> list = new LinkedList<>();
+        //
+        //    for (int i = 0; i < n; i++) {
+        //        char a = s.charAt(i);
+        //        if (hashMap.containsKey(a)) {
+        //            if (list.isEmpty() || list.peek() != hashMap.get(a)) {
+        //                System.out.println("不完整false");
+        //                return;
+        //            }
+        //            list.pop();
+        //        } else {
+        //            list.push(a);
+        //        }
+        //    }
+        //
+        //    System.out.println("不为空"+list.isEmpty());
+        //    return;
+        //}
+
+
 
     }
 }
