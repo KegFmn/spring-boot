@@ -9,7 +9,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -26,6 +28,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName("t_student")
 @ApiModel(value = "Student对象", description = "")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Student implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,7 +45,7 @@ public class Student implements Serializable {
 
     @TableField("is_deleted")
     @TableLogic
-    private Integer isDeleted;
+    private Integer deleted;
 
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
