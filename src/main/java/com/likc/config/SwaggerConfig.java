@@ -1,5 +1,6 @@
 package com.likc.config;
 
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -20,7 +21,8 @@ import java.util.ArrayList;
  * @Description: Swagger3配置类
  */
 
-@EnableOpenApi
+@EnableKnife4j // Knife4j 增强版访问地址: http://localhost:8088/doc.html。
+@EnableOpenApi // Swagger3 访问地址: http://localhost:8082/swagger-ui/#/
 @Configuration
 public class SwaggerConfig {
 
