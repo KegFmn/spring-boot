@@ -43,6 +43,7 @@ public class Student implements Serializable {
     @TableField("age")
     private Integer age;
 
+    // 建议实体类不要有is前缀
     @TableField("is_deleted")
     @TableLogic
     private Integer deleted;

@@ -19,7 +19,7 @@ public class WebSocketController {
     @RequestMapping("/socket/push/{cid}")
     public Result pushToOne(@PathVariable String cid, String message) throws IOException {
         WebSocketServer.sendInfo(message, cid);
-        return Result.succ(null);
+        return new Result(200, "推送成功", null);
     }
 
     /**
@@ -30,6 +30,6 @@ public class WebSocketController {
     @RequestMapping("/socket/push")
     public Result pushToAll(String message) throws IOException {
         WebSocketServer.sendAll(message);
-        return Result.succ(null);
+        return new Result(200, "推送成功", null);
     }
 }
