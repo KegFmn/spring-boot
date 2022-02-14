@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Configuration后面的status，这个用于设置log4j2自身内部的信息输出，可以不设置，当设置成trace时，你会看到log4j2内部各种详细输出-->
+<!--monitorInterval：Log4j能够自动检测修改配置 文件和重新配置本身，设置间隔秒数-->
+<!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+<configuration status="info" monitorInterval="5">
+    <Properties>
+        <!-- 声明日志文件存储的目录 -->
+        <Property name="LOG_HOME" value="logs" />
+        <Property name="FILE_NAME" value="log" />
+        <Property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} -%-5p [%t]  %logger{36} : %msg%n" />
+    </Properties>
+    <Appenders>
+        <!--输出控制台的配置-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <!-- 输出日志的格式-->
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <!--输出日志到文件的配置，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面-->
+        <RollingFile name="RollingFile" fileName="${LOG_HOME}/${FILE_NAME}.log"
+                     filePattern="${LOG_HOME}/$${date:yyyy-MM}/$${date:yyyy-MM-dd}/${FILE_NAME}-%d{yyyy-MM-dd-HH}-%i.log">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <!-- 输出日志的格式-->
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <!--
+                    基于时间的触发策略。该策略主要是完成周期性的log文件封存工作。有两个参数： interval，integer型，指定两次封存动作之间的时间间隔。单位:以日志的命名精度来确定单位，
+					比如yyyy-MM-dd-HH 单位为小时，yyyy-MM-dd-HH-mm 单位为分钟 modulate，boolean型，说明是否对封存时间进行调制。若modulate=true，
+					则封存时间将以0点为边界进行偏移计算。比如，modulate=true，interval=4hours， 那么假设上次封存日志的时间为03:00，则下次封存日志的时间为04:00，
+					之后的封存时间依次为08:00，12:00，16:00
+				-->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="5MB"/>
+            </Policies>
+            <!-- 最多保留文件数 -->
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+    </Appenders>
+    <!--然后定义Logger，只有定义了Logger并引入的Appender，Appender才会生效。Root中level配置了日志级别，可配置其他级别-->
+    <Loggers>
+        <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
+        <logger name="org.mybatis" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+        <!--若是additivity设为false，则 子Logger 只会在自己的appender里输出，而不会在 父Logger 的appender里输出。-->
+        <Logger name="org.springframework" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+
+</configuration>
