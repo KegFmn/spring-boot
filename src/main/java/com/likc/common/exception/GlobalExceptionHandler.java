@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = RuntimeException.class)
      public Result handler(RuntimeException e){
          log.error("运行时异常: ======================={}",e);
-         return new Result(400, e.getMessage(), null);
+         return new Result(400, e.getMessage());
      }
 
     /**
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = IllegalArgumentException.class)
     public Result handler(IllegalArgumentException e){
         log.error("Assert异常: ======================={}",e);
-        return new Result(400, e.getMessage(), null);
+        return new Result(400, e.getMessage());
     }
 
 
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
         log.error("实体校验异常: ======================={}",e);
         BindingResult bindingResult = e.getBindingResult();
         ObjectError objectError = bindingResult.getAllErrors().stream().findFirst().get();
-        return new Result(400, objectError.getDefaultMessage(), null);
+        return new Result(400, objectError.getDefaultMessage());
     }
 
     /**
@@ -64,7 +64,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = IOException.class)
     public Result handler(IOException e){
         log.error("io异常: ======================={}",e);
-        return new Result(400, e.getMessage(), null);
+        return new Result(400, e.getMessage());
     }
 
 }
