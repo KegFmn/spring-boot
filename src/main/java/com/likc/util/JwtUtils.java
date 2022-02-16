@@ -19,8 +19,19 @@ import java.util.Date;
 @ConfigurationProperties(prefix = "jwt")
 public class JwtUtils {
 
+    /**
+     *  密钥
+     */
     private String secret;
+
+    /**
+     *  过期时间
+     */
     private long expire;
+
+    /**
+     *  header: Authorization
+     */
     private String header;
 
     /**

@@ -32,7 +32,8 @@ public class AccountRealm extends AuthorizingRealm {
     }
 
     /**
-     *  获取权限给shiro
+     *  授权
+     *  只有当需要检测用户权限的时候才会调用此方法，例如checkRole,checkPermission之类的
      * @param principals
      * @return
      */

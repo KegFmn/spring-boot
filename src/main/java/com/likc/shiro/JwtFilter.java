@@ -35,7 +35,7 @@ public class JwtFilter extends AuthenticatingFilter {
     private ObjectMapper objectMapper;
 
     /**
-     *  从请求头获取token
+     *  从请求头获取token并生成jwt
      * @param servletRequest
      * @param servletResponse
      * @return
