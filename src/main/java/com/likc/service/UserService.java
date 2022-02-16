@@ -1,6 +1,6 @@
 package com.likc.service;
 
-import com.likc.po.Student;
+import com.likc.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author likc
  * @since 2022-02-15
  */
-public interface StudentService extends IService<Student> {
+public interface UserService extends IService<User> {
 
 }

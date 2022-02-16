@@ -1,8 +1,8 @@
 package com.likc.service.impl;
 
-import com.likc.po.Student;
-import com.likc.mapper.StudentMapper;
-import com.likc.service.StudentService;
+import com.likc.po.User;
+import com.likc.mapper.UserMapper;
+import com.likc.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2022-02-15
  */
 @Service
-public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
 }

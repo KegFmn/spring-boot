@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * @Description: Swagger3配置类
  */
 
-@EnableKnife4j // Knife4j 增强版访问地址: http://localhost:8088/doc.html。
+@EnableKnife4j // Knife4j 增强版访问地址: http://localhost:8082/doc.html。
 @EnableOpenApi // Swagger3 访问地址: http://localhost:8082/swagger-ui/#/
 @Configuration
 public class SwaggerConfig {

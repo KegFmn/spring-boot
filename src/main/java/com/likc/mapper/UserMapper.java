@@ -1,6 +1,6 @@
 package com.likc.mapper;
 
-import com.likc.po.Student;
+import com.likc.po.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2022-02-15
  */
 @Mapper
-public interface StudentMapper extends BaseMapper<Student> {
+public interface UserMapper extends BaseMapper<User> {
 
 }

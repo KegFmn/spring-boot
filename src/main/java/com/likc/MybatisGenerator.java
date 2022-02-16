@@ -15,7 +15,7 @@ import java.util.Collections;
  */
 public class MybatisGenerator {
     public static void main(String[] args) {
-        FastAutoGenerator.create("jdbc:mysql://localhost:3306/tsboot", "root", "root")
+        FastAutoGenerator.create("jdbc:mysql://localhost:3306/templateboot?serverTimezone=Asia/Shanghai", "root", "root")
             .globalConfig(builder -> {
                 builder.author("likc") // 设置作者
                         .enableSwagger() // 开启 swagger 模式
@@ -36,7 +36,7 @@ public class MybatisGenerator {
                         .pathInfo(Collections.singletonMap(OutputFile.mapperXml, System.getProperty("user.dir")+"/src/main/resources/mapper"));
             })
             .strategyConfig(builder -> {
-                builder.addInclude("t_student") // 设置需要生成的表名
+                builder.addInclude("t_user","t_student") // 设置需要生成的表名
                         .addTablePrefix("t_", "c_") // 设置过滤表前缀
 
                         //Mapper策略
