@@ -3,6 +3,7 @@ package com.likc.shiro;
 import com.likc.po.User;
 import com.likc.service.UserService;
 import com.likc.util.JwtUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
  * @Date: 2022/02/15/20:15
  * @Description:
  */
+@Slf4j
 @Component
 public class AccountRealm extends AuthorizingRealm {
 
@@ -52,6 +54,7 @@ public class AccountRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 
         JwtToken jwtToken = (JwtToken)token;
+        log.info("jwt----------------->{}", jwtToken);
 
         String userId = jwtUtils.getClaimByToken((String) jwtToken.getPrincipal()).getSubject();
 
@@ -67,6 +70,8 @@ public class AccountRealm extends AuthorizingRealm {
 
         AccountProfile profile = new AccountProfile();
         BeanUtils.copyProperties(user, profile);
+
+        log.info("profile----------------->{}", profile.toString());
 
         return new SimpleAuthenticationInfo(profile, jwtToken.getCredentials(), getName());
     }

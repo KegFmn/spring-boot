@@ -35,7 +35,7 @@ public class JwtFilter extends AuthenticatingFilter {
     private ObjectMapper objectMapper;
 
     /**
-     *  从请求头获取token并生成jwt
+     *  实现登录生成我们自定义支持的JwtToken
      * @param servletRequest
      * @param servletResponse
      * @return
@@ -44,7 +44,7 @@ public class JwtFilter extends AuthenticatingFilter {
     @Override
     protected AuthenticationToken createToken(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
 
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletRequest request = (HttpServletRequest)servletRequest;
         String jwt = request.getHeader("Authorization");
         // 当请求头的token为空, 返回空否则生成jwt
         if (StringUtils.isBlank(jwt)){
@@ -56,7 +56,7 @@ public class JwtFilter extends AuthenticatingFilter {
     }
 
     /**
-     *  拦截
+     *  拦截校验，当头部没有Authorization时候，直接通过，不需要自动登录；当带有的时候，校验jwt的有效性，没问题就直接执行executeLogin方法实现自动登录
      * @param servletRequest
      * @param servletResponse
      * @return
@@ -65,7 +65,7 @@ public class JwtFilter extends AuthenticatingFilter {
     @Override
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
 
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletRequest request = (HttpServletRequest)servletRequest;
         String jwt = request.getHeader("Authorization");
         // 当请求头的token为空，放行去Controller由@注解拦截
         if (StringUtils.isBlank(jwt)){
@@ -84,7 +84,7 @@ public class JwtFilter extends AuthenticatingFilter {
 
 
     /**
-     *  登录失败处理
+     *  登录异常时候进入的方法，直接把异常信息封装然后抛出
      * @param token
      * @param e
      * @param request
@@ -94,24 +94,23 @@ public class JwtFilter extends AuthenticatingFilter {
     @Override
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
 
-        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-
-        Throwable throwable = e.getCause() == null ? e : e.getCause();
-
-        Result result = new Result(400, throwable.getMessage());
-
+        HttpServletResponse httpServletResponse = (HttpServletResponse)response;
         try {
+            Throwable throwable = e.getCause() == null ? e : e.getCause();
+
+            Result result = new Result(400, throwable.getMessage());
+
             String json = objectMapper.writeValueAsString(result);
             httpServletResponse.getWriter().print(json);
         } catch (Exception exception) {
-            exception.printStackTrace();
+
         }
 
         return false;
     }
 
     /**
-     * 对跨域提供支持
+     * 拦截器的前置拦截，对跨域提供支持
      */
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
