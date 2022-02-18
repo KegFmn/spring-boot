@@ -17,7 +17,7 @@ import java.util.Date;
 @Data
 @Component
 @ConfigurationProperties(prefix = "jwt")
-public class JwtUtil {
+public class JwtUtils {
 
     /**
      *  密钥
