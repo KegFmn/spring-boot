@@ -6,7 +6,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/templateboot?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/tsboot?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
     password: root
 
@@ -63,10 +63,26 @@ spring:
           enabled: true
       #合并多个DruidDataSource的监控数据
       use-global-data-source-stat: true
-#  mvc:
-#    pathmatch:
-#      #请求路径与SpringMVC处理映射匹配的默认策略已从AntPathMatcher更改为PathPatternParser(解决springfox空指针报错)
-##      matching-strategy: ant_path_matcher
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 20000
+#    集群环境打开下面注释，单机不需要打开
+#    cluster:
+#      集群信息
+#      nodes: xxx.xxx.xxx.xxx:xxxx,xxx.xxx.xxx.xxx:xxxx,xxx.xxx.xxx.xxx:xxxx
+#      #默认值是5 一般当此值设置过大时，容易报：Too many Cluster redirections
+#      maxRedirects: 3
+    lettuce:
+      pool:
+        max-active: 8
+        min-idle: 0
+        max-idle: 8
+        max-wait: -1
+    password:
+  application:
+    name: spring-boot-redis
 
 logging:
   config: classpath:log4j2-dev.xml
