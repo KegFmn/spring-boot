@@ -26,7 +26,7 @@ public class MybatisGenerator {
             .packageConfig(builder -> {
                 builder.parent("com") // 设置父包名
                         .moduleName("likc")  //设置父包模块名
-                        .entity("po")   //pojo 实体类包名
+                        .entity("entity")   //entity实体类包名
                         .service("service") //Service 包名
                         .serviceImpl("service.impl") // ***ServiceImpl 包名
                         .mapper("mapper")   //Mapper 包名
