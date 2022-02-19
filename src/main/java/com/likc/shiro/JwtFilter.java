@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @Author: likc
  * @Date: 2022/02/15/20:36
- * @Description:
+ * @Description: shiro过滤器
  */
 @Component
 public class JwtFilter extends AuthenticatingFilter {

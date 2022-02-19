@@ -16,6 +16,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @Author: likc
+ * @Date: 2022/02/19/20:36
+ * @Description: websocket服务端
+ */
 @Slf4j
 @Component
 @ServerEndpoint("/websocket/{id}")

@@ -11,7 +11,9 @@ import com.baomidou.mybatisplus.generator.fill.Column;
 import java.util.Collections;
 
 /**
- *  mybatis-plus代码生成器
+ * @Author: likc
+ * @Date: 2022/02/19/20:36
+ * @Description: mybatis-plus代码生成器
  */
 public class MybatisGenerator {
     public static void main(String[] args) {

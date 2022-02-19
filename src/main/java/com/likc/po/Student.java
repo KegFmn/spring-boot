@@ -54,7 +54,7 @@ public class Student implements Serializable {
     @ApiModelProperty("逻辑删除0/1")
     @TableField("is_deleted")
     @TableLogic
-    private Integer isDeleted;
+    private Integer deleted;
 
 
 }

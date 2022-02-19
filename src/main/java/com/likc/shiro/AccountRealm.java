@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 /**
  * @Author: likc
  * @Date: 2022/02/15/20:15
- * @Description:
+ * @Description: shiro权限控制器
  */
 @Slf4j
 @Component

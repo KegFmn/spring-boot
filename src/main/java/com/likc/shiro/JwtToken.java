@@ -6,7 +6,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 /**
  * @Author: likc
  * @Date: 2022/02/15/20:40
- * @Description:
+ * @Description: jwt
  */
 @AllArgsConstructor
 public class JwtToken implements AuthenticationToken {

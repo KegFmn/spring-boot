@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 /**
- * jwt工具类
+ * @Author: likc
+ * @Date: 2022/02/19/20:36
+ * @Description: jwt工具类
  */
 @Slf4j
 @Data

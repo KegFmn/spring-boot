@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * @Author: likc
  * @Date: 2022/02/15/20:08
- * @Description: shiro启用注解拦截控制器
+ * @Description: shiro配置类
  */
 @Configuration
 public class ShiroConfig {

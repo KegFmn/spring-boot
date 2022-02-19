@@ -2,7 +2,7 @@ package com.likc.util;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.apache.commons.collections.CollectionUtils;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -12,9 +12,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author likc
- * @date 2022/2/18
- * @description
+ * @Author: likc
+ * @Date: 2022/02/19/20:36
+ * @Description: redis工具类
  */
 @Component
 public class RedisUtils {
@@ -24,10 +24,9 @@ public class RedisUtils {
 
     /**
      * 指定缓存失效时间
-     *
-     * @param key  键
-     * @param time 时间(秒)
-     * @return boolean是否失效
+     * @param key 键
+     * @param time 时间（秒）
+     * @return true / false
      */
     public boolean expire(String key, long time) {
         try {
@@ -42,20 +41,18 @@ public class RedisUtils {
     }
 
     /**
-     * 根据key 获取过期时间
-     *
-     * @param key 键 不能为null
-     * @return 时间(秒) 返回0代表为永久有效
+     * 根据 key 获取过期时间
+     * @param key 键
+     * @return
      */
     public long getExpire(String key) {
         return redisTemplate.getExpire(key, TimeUnit.SECONDS);
     }
 
     /**
-     * 判断key是否存在
-     *
+     * 判断 key 是否存在
      * @param key 键
-     * @return true 存在 false不存在
+     * @return true / false
      */
     public boolean hasKey(String key) {
         try {
@@ -69,24 +66,23 @@ public class RedisUtils {
     /**
      * 删除缓存
      *
-     * @param key 可以传一个值 或多个
+     * @param key 键（一个或者多个）
      */
-    @SuppressWarnings("unchecked")
     public void del(String... key) {
         if (key != null && key.length > 0) {
             if (key.length == 1) {
                 redisTemplate.delete(key[0]);
             } else {
+//                传入一个 Collection<String> 集合
                 redisTemplate.delete(Arrays.asList(key));
             }
         }
     }
 
-    //============================String=============================
+//    ============================== String ==============================
 
     /**
      * 普通缓存获取
-     *
      * @param key 键
      * @return 值
      */
@@ -96,10 +92,9 @@ public class RedisUtils {
 
     /**
      * 普通缓存放入
-     *
-     * @param key   键
+     * @param key 键
      * @param value 值
-     * @return true成功 false失败
+     * @return true / false
      */
     public boolean set(String key, Object value) {
         try {
@@ -109,16 +104,14 @@ public class RedisUtils {
             e.printStackTrace();
             return false;
         }
-
     }
 
     /**
      * 普通缓存放入并设置时间
-     *
-     * @param key   键
+     * @param key 键
      * @param value 值
-     * @param time  时间(秒) time要大于0 如果time小于等于0 将设置无限期
-     * @return true成功 false 失败
+     * @param time 时间（秒），如果 time < 0 则设置无限时间
+     * @return true / false
      */
     public boolean set(String key, Object value, long time) {
         try {
@@ -136,39 +129,36 @@ public class RedisUtils {
 
     /**
      * 递增
-     *
      * @param key 键
-     * @param delta  要增加几(大于0)
+     * @param delta 递增大小
      * @return
      */
     public long incr(String key, long delta) {
         if (delta < 0) {
-            throw new RuntimeException("递增因子必须大于0");
+            throw new RuntimeException("递增因子必须大于 0");
         }
         return redisTemplate.opsForValue().increment(key, delta);
     }
 
     /**
      * 递减
-     *
      * @param key 键
-     * @param delta  要减少几(小于0)
+     * @param delta 递减大小
      * @return
      */
     public long decr(String key, long delta) {
         if (delta < 0) {
-            throw new RuntimeException("递减因子必须大于0");
+            throw new RuntimeException("递减因子必须大于 0");
         }
-        return redisTemplate.opsForValue().increment(key, -delta);
+        return redisTemplate.opsForValue().increment(key, delta);
     }
 
-    //================================Map=================================
+//    ============================== Map ==============================
 
     /**
      * HashGet
-     *
-     * @param key  键 不能为null
-     * @param item 项 不能为null
+     * @param key 键（no null）
+     * @param item 项（no null）
      * @return 值
      */
     public Object hget(String key, String item) {
@@ -176,9 +166,8 @@ public class RedisUtils {
     }
 
     /**
-     * 获取hashKey对应的所有键值
-     *
-     * @param key 键
+     * 获取 key 对应的 map
+     * @param key 键（no null）
      * @return 对应的多个键值
      */
     public Map<Object, Object> hmget(String key) {
@@ -187,12 +176,11 @@ public class RedisUtils {
 
     /**
      * HashSet
-     *
      * @param key 键
-     * @param map 对应多个键值
-     * @return true 成功 false 失败
+     * @param map 值
+     * @return true / false
      */
-    public boolean hmset(String key, Map<String, Object> map) {
+    public boolean hmset(String key, Map<Object, Object> map) {
         try {
             redisTemplate.opsForHash().putAll(key, map);
             return true;
@@ -204,13 +192,12 @@ public class RedisUtils {
 
     /**
      * HashSet 并设置时间
-     *
-     * @param key  键
-     * @param map  对应多个键值
-     * @param time 时间(秒)
-     * @return true成功 false失败
+     * @param key 键
+     * @param map 值
+     * @param time 时间
+     * @return true / false
      */
-    public boolean hmset(String key, Map<String, Object> map, long time) {
+    public boolean hmset(String key, Map<Object, Object> map, long time) {
         try {
             redisTemplate.opsForHash().putAll(key, map);
             if (time > 0) {
@@ -224,12 +211,11 @@ public class RedisUtils {
     }
 
     /**
-     * 向一张hash表中放入数据,如果不存在将创建
-     *
-     * @param key   键
-     * @param item  项
+     * 向一张 Hash表 中放入数据，如不存在则创建
+     * @param key 键
+     * @param item 项
      * @param value 值
-     * @return true 成功 false失败
+     * @return true / false
      */
     public boolean hset(String key, String item, Object value) {
         try {
@@ -242,13 +228,12 @@ public class RedisUtils {
     }
 
     /**
-     * 向一张hash表中放入数据,如果不存在将创建
-     *
-     * @param key   键
-     * @param item  项
+     * 向一张 Hash表 中放入数据，并设置时间，如不存在则创建
+     * @param key 键
+     * @param item 项
      * @param value 值
-     * @param time  时间(秒)  注意:如果已存在的hash表有时间,这里将会替换原有的时间
-     * @return true 成功 false失败
+     * @param time 时间（如果原来的 Hash表 设置了时间，这里会覆盖）
+     * @return true / false
      */
     public boolean hset(String key, String item, Object value, long time) {
         try {
@@ -264,57 +249,52 @@ public class RedisUtils {
     }
 
     /**
-     * 删除hash表中的值
-     *
-     * @param key  键 不能为null
-     * @param item 项 可以使多个 不能为null
+     * 删除 Hash表 中的值
+     * @param key 键
+     * @param item 项（可以多个，no null）
      */
     public void hdel(String key, Object... item) {
         redisTemplate.opsForHash().delete(key, item);
     }
 
     /**
-     * 判断hash表中是否有该项的值
-     *
-     * @param key  键 不能为null
-     * @param item 项 不能为null
-     * @return true 存在 false不存在
+     * 判断 Hash表 中是否有该键的值
+     * @param key 键（no null）
+     * @param item 值（no null）
+     * @return true / false
      */
     public boolean hHasKey(String key, String item) {
         return redisTemplate.opsForHash().hasKey(key, item);
     }
 
     /**
-     * hash递增 如果不存在,就会创建一个 并把新增后的值返回
-     *
-     * @param key  键
+     * Hash递增，如果不存在则创建一个，并把新增的值返回
+     * @param key 键
      * @param item 项
-     * @param by   要增加几(大于0)
+     * @param by 递增大小 > 0
      * @return
      */
-    public double hincr(String key, String item, double by) {
+    public Double hincr(String key, String item, Double by) {
         return redisTemplate.opsForHash().increment(key, item, by);
     }
 
     /**
-     * hash递减
-     *
-     * @param key  键
+     * Hash递减
+     * @param key 键
      * @param item 项
-     * @param by   要减少记(小于0)
+     * @param by 递减大小
      * @return
      */
-    public double hdecr(String key, String item, double by) {
+    public Double hdecr(String key, String item, Double by) {
         return redisTemplate.opsForHash().increment(key, item, -by);
     }
 
-    //============================set=============================
+//    ============================== Set ==============================
 
     /**
-     * 根据key获取Set中的所有值
-     *
+     * 根据 key 获取 set 中的所有值
      * @param key 键
-     * @return
+     * @return 值
      */
     public Set<Object> sGet(String key) {
         try {
@@ -326,11 +306,10 @@ public class RedisUtils {
     }
 
     /**
-     * 根据value从一个set中查询,是否存在
-     *
-     * @param key   键
+     * 从键为 key 的 set 中，根据 value 查询是否存在
+     * @param key 键
      * @param value 值
-     * @return true 存在 false不存在
+     * @return true / false
      */
     public boolean sHasKey(String key, Object value) {
         try {
@@ -342,10 +321,9 @@ public class RedisUtils {
     }
 
     /**
-     * 将数据放入set缓存
-     *
-     * @param key    键
-     * @param values 值 可以是多个
+     * 将数据放入 set缓存
+     * @param key 键值
+     * @param values 值（可以多个）
      * @return 成功个数
      */
     public long sSet(String key, Object... values) {
@@ -358,17 +336,18 @@ public class RedisUtils {
     }
 
     /**
-     * 将set数据放入缓存
-     *
-     * @param key    键
-     * @param time   时间(秒)
-     * @param values 值 可以是多个
-     * @return 成功个数
+     * 将数据放入 set缓存，并设置时间
+     * @param key 键
+     * @param time 时间
+     * @param values 值（可以多个）
+     * @return 成功放入个数
      */
-    public long sSetAndTime(String key, long time, Object... values) {
+    public long sSet(String key, long time, Object... values) {
         try {
-            Long count = redisTemplate.opsForSet().add(key, values);
-            if (time > 0) expire(key, time);
+            long count = redisTemplate.opsForSet().add(key, values);
+            if (time > 0) {
+                expire(key, time);
+            }
             return count;
         } catch (Exception e) {
             e.printStackTrace();
@@ -377,10 +356,9 @@ public class RedisUtils {
     }
 
     /**
-     * 获取set缓存的长度
-     *
+     * 获取 set缓存的长度
      * @param key 键
-     * @return
+     * @return 长度
      */
     public long sGetSetSize(String key) {
         try {
@@ -392,29 +370,27 @@ public class RedisUtils {
     }
 
     /**
-     * 移除值为value的
-     *
-     * @param key    键
-     * @param values 值 可以是多个
-     * @return 移除的个数
+     * 移除 set缓存中，值为 value 的
+     * @param key 键
+     * @param values 值
+     * @return 成功移除个数
      */
     public long setRemove(String key, Object... values) {
         try {
-            Long count = redisTemplate.opsForSet().remove(key, values);
-            return count;
+            return redisTemplate.opsForSet().remove(key, values);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
     }
-    //===============================list=================================
+
+//    ============================== List ==============================
 
     /**
-     * 获取list缓存的内容
-     *
-     * @param key   键
+     * 获取 list缓存的内容
+     * @param key 键
      * @param start 开始
-     * @param end   结束  0 到 -1代表所有值
+     * @param end 结束（0 到 -1 代表所有值）
      * @return
      */
     public List<Object> lGet(String key, long start, long end) {
@@ -427,10 +403,9 @@ public class RedisUtils {
     }
 
     /**
-     * 获取list缓存的长度
-     *
+     * 获取 list缓存的长度
      * @param key 键
-     * @return
+     * @return 长度
      */
     public long lGetListSize(String key) {
         try {
@@ -442,11 +417,12 @@ public class RedisUtils {
     }
 
     /**
-     * 通过索引 获取list中的值
-     *
-     * @param key   键
-     * @param index 索引  index>=0时， 0 表头，1 第二个元素，依次类推；index<0时，-1，表尾，-2倒数第二个元素，依次类推
-     * @return
+     * 根据索引 index 获取键为 key 的 list 中的元素
+     * @param key 键
+     * @param index 索引
+     *              当 index >= 0 时 {0:表头, 1:第二个元素}
+     *              当 index < 0 时 {-1:表尾, -2:倒数第二个元素}
+     * @return 值
      */
     public Object lGetIndex(String key, long index) {
         try {
@@ -458,12 +434,10 @@ public class RedisUtils {
     }
 
     /**
-     * 将list放入缓存
-     *
-     * @param key   键
+     * 将值 value 插入键为 key 的 list 中，如果 list 不存在则创建空 list
+     * @param key 键
      * @param value 值
-     * @param time  时间(秒)
-     * @return
+     * @return true / false
      */
     public boolean lSet(String key, Object value) {
         try {
@@ -476,17 +450,18 @@ public class RedisUtils {
     }
 
     /**
-     * 将list放入缓存
-     *
-     * @param key   键
+     * 将值 value 插入键为 key 的 list 中，并设置时间
+     * @param key 键
      * @param value 值
-     * @param time  时间(秒)
-     * @return
+     * @param time 时间
+     * @return true / false
      */
     public boolean lSet(String key, Object value, long time) {
         try {
             redisTemplate.opsForList().rightPush(key, value);
-            if (time > 0) expire(key, time);
+            if (time > 0) {
+                expire(key, time);
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -495,15 +470,14 @@ public class RedisUtils {
     }
 
     /**
-     * 将list放入缓存
-     *
-     * @param key   键
-     * @param value 值
-     * @return
+     * 将 values 插入键为 key 的 list 中
+     * @param key 键
+     * @param values 值
+     * @return true / false
      */
-    public boolean lSet(String key, List<Object> value) {
+    public boolean lSetList(String key, List<Object> values) {
         try {
-            redisTemplate.opsForList().rightPushAll(key, value);
+            redisTemplate.opsForList().rightPushAll(key, values);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -512,17 +486,18 @@ public class RedisUtils {
     }
 
     /**
-     * 将list放入缓存
-     *
-     * @param key   键
-     * @param value 值
-     * @param time  时间(秒)
-     * @return
+     * 将 values 插入键为 key 的 list 中，并设置时间
+     * @param key 键
+     * @param values 值
+     * @param time 时间
+     * @return true / false
      */
-    public boolean lSet(String key, List<Object> value, long time) {
+    public boolean lSetList(String key, List<Object> values, long time) {
         try {
-            redisTemplate.opsForList().rightPushAll(key, value);
-            if (time > 0) expire(key, time);
+            redisTemplate.opsForList().rightPushAll(key, values);
+            if (time > 0) {
+                expire(key, time);
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -531,12 +506,11 @@ public class RedisUtils {
     }
 
     /**
-     * 根据索引修改list中的某条数据
-     *
-     * @param key   键
+     * 根据索引 index 修改键为 key 的值
+     * @param key 键
      * @param index 索引
      * @param value 值
-     * @return
+     * @return true / false
      */
     public boolean lUpdateIndex(String key, long index, Object value) {
         try {
@@ -549,20 +523,21 @@ public class RedisUtils {
     }
 
     /**
-     * 移除N个值为value
-     *
-     * @param key   键
-     * @param count 移除多少个
-     * @param value 值
-     * @return 移除的个数
+     * 在键为 key 的 list 中删除值为 value 的元素
+     * @param key 键
+     * @param count 如果 count == 0 则删除 list 中所有值为 value 的元素
+     *              如果 count > 0 则删除 list 中最左边那个值为 value 的元素
+     *              如果 count < 0 则删除 list 中最右边那个值为 value 的元素
+     * @param value
+     * @return
      */
     public long lRemove(String key, long count, Object value) {
         try {
-            Long remove = redisTemplate.opsForList().remove(key, count, value);
-            return remove;
+            return redisTemplate.opsForList().remove(key, count, value);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
     }
+
 }

@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 /**
  * @author likc
  * @date 2022/2/18
- * @description
+ * @description redis配置类
  */
 @Configuration
 public class RedisConfig {

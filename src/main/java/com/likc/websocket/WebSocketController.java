@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
+/**
+ * @Author: likc
+ * @Date: 2022/02/19/20:36
+ * @Description: websocket控制层
+ */
 @RestController
 public class WebSocketController {
 

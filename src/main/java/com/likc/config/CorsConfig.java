@@ -9,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @Date: 2022/01/04/23:28
  * @Description: 解决跨域问题
  */
-
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
     @Override
