@@ -6,6 +6,11 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+/**
+ * @Author: likc
+ * @Date: 2022/01/04/23:28
+ * @Description: 结果集
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

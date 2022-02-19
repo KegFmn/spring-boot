@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.io.IOException;
 
+/**
+ * @Author: likc
+ * @Date: 2022/01/04/23:28
+ * @Description: 全局异常处理
+ */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
