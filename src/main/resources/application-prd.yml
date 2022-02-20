@@ -67,7 +67,7 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
-    timeout: 20000
+    timeout: 2000
     #    集群环境打开下面注释，单机不需要打开
     #    cluster:
     #      集群信息
@@ -76,13 +76,18 @@ spring:
     #      maxRedirects: 3
     lettuce:
       pool:
-        max-active: 8
+        #redis最小空闲连接数量,当空闲连接小于这个数之后会去申请空闲连接直到最大的空闲连接数量
         min-idle: 0
+        #redis最大空闲连接数量 表示即使没有数据连接时依然可以保持50个空闲的连接而不被清除,随时处于待命状态
         max-idle: 8
+        #最大连接数,这个直接设置成并发量就行，自己看着设置，一般设置成100就可以了，除非你是大项目
+        max-active: 8
+        #等待连接超时时间,如果在等待的连接时间超过了这个时间就舍弃掉,这里配置5分钟
         max-wait: -1
+        #每ms运行一次空闲连接回收器
+        time-between-eviction-runs: 1000
+      shutdown-timeout: 10000
     password:
-  application:
-    name: spring-boot-redis
 
 shiro-redis:
   enable: true

@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 @Slf4j
 @SpringBootTest
@@ -141,7 +138,7 @@ public class AcBoy {
         }
     }
 
-    /*删除数组重复项*/
+    /*删除数组重复项，返回新数组长度，不考虑新长度后面的数组*/
     static int deletRepeatArray(int[] nums){
         if(nums == null || nums.length == 0) {
             return 0;
@@ -160,8 +157,118 @@ public class AcBoy {
         return s+1;
     }
 
+    /*给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度*/
+    static int removeElement(int[] nums, int val) {
+        if(nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        int left = 0;
+        int right = 0;
+
+        while(right < nums.length){
+            if(nums[right] != val){
+                nums[left] = nums[right];
+                left++;
+            }
+            right++;
+        }
+        return left;
+    }
+
+    /*输入的字符串反转过来，输入字符串以字符数组的形式给出*/
+    static void reverseString(char[] s) {
+        int n = s.length;
+        for(int left = 0, right = n - 1 ; left < right; left++, right--){
+            char temp = s[left];
+            s[left] = s[right];
+            s[right] = temp;
+        }
+    }
+
+    /*给定一个字符串，验证它是否是回文串，只考虑字母和数字字符，可以忽略字母的大小写*/
+    static boolean isPalindrome(String s) {
+        int n = 0;
+        int m = s.length() - 1;
+
+        while(n < m){
+            // 不是字母和数字直接跳过
+            while(n < m && !Character.isLetterOrDigit(s.charAt(n))){
+                n++;
+            }
+            while(n < m && !Character.isLetterOrDigit(s.charAt(m))){
+                m--;
+            }
+            if(Character.toLowerCase(s.charAt(n)) != Character.toLowerCase(s.charAt(m)))           {
+                return false;
+            }
+            n++;
+            m--;
+        }
+        return true;
+    }
+
+    /*
+    *
+    * 全排列
+    * 状态变量：递归到第几层    depth
+    *         已经选了什么数  path
+    *         布尔数组       used
+    * */
+    static List<List<Integer>> permute(int[] nums) {
+        int len = nums.length;
+        List<List<Integer>> res = new ArrayList<>();
+        if (len == 0) {
+            return res;
+        }
+
+        Deque<Integer> path = new ArrayDeque<>();
+        boolean[] used = new boolean[len];
+        dfs(nums, len, 0, path, used, res);
+        return res;
+    }
+    private static void dfs(int[] nums, int len, int depth, Deque<Integer> path, boolean[] used, List<List<Integer>> res) {
+        if (depth == len){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+
+        for (int i = 0; i < len; i++) {
+            if (used[i]){
+                continue;
+            }
+            path.addLast(nums[i]);
+            used[i] = true;
+            dfs(nums, len, depth + 1, path, used, res);
+            path.removeLast();
+            used[i] = false;
+        }
+
+    }
+
+    /*给你两个字符串 haystack 和 needle ，请你在 haystack 字符串中找出 needle 字符串出现的第一个位置（下标从 0 开始）。如果不存在，则返回  -1*/
+    static int strStr(String haystack, String needle) {
+        int n = haystack.length(), m = needle.length();
+        // i+m 的意思是匹配到原字符串剩余长度不足匹配字符串时停止
+        for (int i = 0; i + m <= n; i++) {
+            boolean flag = true;
+            for (int j = 0; j < m; j++) {
+                if (haystack.charAt(i + j) != needle.charAt(j)) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
     public static void main(String[] args) {
-        Instant now = Instant.now();
-        System.out.println(now);
+        int[] nums = new int[]{1,2,3};
+        List<List<Integer>> list = permute(nums);
+        System.out.println(list.toString());
     }
 }
