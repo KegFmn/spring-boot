@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -47,6 +48,13 @@ class TemplateBootApplicationTests {
         String toUserId = ((ObjectNode)jsonNode).get("firstname").toString();
         System.out.println(toUserId);
         System.out.println(objectMapper.writeValueAsString(((ObjectNode)jsonNode)));
+    }
+
+    @Test
+    void StringTest() {
+        int c = 10;
+        c>>=1;
+        System.out.println(c);
     }
 
 }

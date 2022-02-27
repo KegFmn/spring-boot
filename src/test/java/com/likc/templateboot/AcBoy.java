@@ -35,7 +35,7 @@ public class AcBoy {
     }
 
     /*回文数，判断返回boolen*/
-    static Boolean SameNumberAtBeginningEnd(int num){
+    static Boolean sameNumberAtBeginningEnd(int num){
         if (num < 0 || (num % 10 == 0 && num != 0)) {
             return false;
         }
@@ -124,16 +124,16 @@ public class AcBoy {
     }
 
     /*合并两个有序链表*/
-    static ListNode OrderListNode(ListNode list1, ListNode list2){
+    static ListNode orderListNode(ListNode list1, ListNode list2){
         if(list1 == null) {
             return list2;
         } else if(list2 == null) {
             return list1;
         } else if(list1.val < list2.val) {
-            list1.next = OrderListNode(list1.next, list2);
+            list1.next = orderListNode(list1.next, list2);
             return list1;
         } else {
-            list2.next = OrderListNode(list1 , list2.next);
+            list2.next = orderListNode(list1 , list2.next);
             return list2;
         }
     }
@@ -265,10 +265,220 @@ public class AcBoy {
         return -1;
     }
 
+    /**
+     * 使用递归的二分查找
+     *title:recursionBinarySearch
+     *@param ints 升序数组
+     *@param key 待查找关键字
+     *@return 找到的位置
+     */
+    static int binarySearch(int[] ints, int key, int low, int high){
+        if (key < ints[low] || key > ints[high] || low > high){
+            return -1;
+        }
+
+        int middle = (low + high) / 2;
+        if (ints[middle] > key){
+            return binarySearch(ints , key, low, middle-1);
+        } else if (ints[middle] < key){
+            return binarySearch(ints, key, middle+1, high);
+        } else {
+            return middle;
+        }
+    }
+
+    /*冒泡排序*/
+    static int[] bubbingSort(int[] nums){
+        if (nums.length == 0 || nums == null){
+            return null;
+        }
+
+        int temp = 0;
+        for (int i = 0; i < nums.length-1; i++){
+            for (int j = 0; j < nums.length-1-i; j++){
+                if (nums[j] > nums[j+1]){
+                    temp = nums[j];
+                    nums[j] = nums[j+1];
+                    nums[j+1] = temp;
+                }
+            }
+        }
+        return nums;
+    }
+
+    /*递归快速排序*/
+    static int[] fastSort(int[] nums, int left, int right){
+        int i, j, t, temp;
+        if(left > right){
+            return null;
+        }
+
+        temp = nums[left]; //temp中存的就是基准数
+        i = left;
+        j = right;
+        while(i != j) { //顺序很重要，要先从右边开始找
+            while(nums[j] >= temp && i < j)
+                j--;
+            while(nums[i] <= temp && i < j)//再找右边的
+                i++;
+            if(i < j)//交换两个数在数组中的位置
+            {
+                t = nums[i];
+                nums[i] = nums[j];
+                nums[j] = t;
+            }
+        }
+        //最终将基准数归位
+        nums[left] = nums[i];
+        nums[i] = temp;
+        fastSort(nums, left, i-1); //继续处理左边的，这里是一个递归的过程
+        fastSort(nums,i+1, right); //继续处理右边的 ，这里是一个递归的过程
+        return nums;
+    }
+    
+    static ListNode twoNumAdd(ListNode l1, ListNode l2){
+        // 初始化头结点，我们需要的结果是pre.next
+        ListNode pre = new ListNode(0);
+        // 将cur同样指向pre所指向的地址
+        ListNode cur = pre;
+
+        // 初始化进位
+        int carry = 0;
+        // 用或者是因为 可能有一个先为null也就是短一些
+        while (l1 != null || l2 != null){
+            int x = l1 == null ? 0 : l1.val;
+            int y = l2 == null ? 0 : l2.val;
+            int sum = x + y + carry;
+            // 取进位
+            carry = sum / 10;
+            // 取下一个节点的值
+            sum = sum % 10;
+            // 将cur的下一节点为 ListNode z，pre和cur指向同一地址所以相当于吧pre的也改了
+            cur.next = new ListNode(sum);
+
+            // 将cur的指向地址改为ListNode z，形成pre->cur的局面
+            cur = cur.next;
+
+            // 不为空节点后移
+            if (l1 != null){
+                l1 = l1.next;
+            }
+            // 不为空节点后移
+            if (l2 != null){
+                l2 = l2.next;
+            }
+
+        }
+        if(carry == 1) {
+            cur.next = new ListNode(carry);
+        }
+
+        // 返回pre的下一个节点，也就是我们需要的一整条链表
+        return pre.next;
+    }
+
+    /*最长不重复子串*/
+    static int lengthOfLongestSubstring(String s){
+        HashMap<Character, Integer> map = new HashMap<>();
+        int maxLen = 0;//用于记录最大不重复子串的长度
+        int left = 0;//滑动窗口左指针
+        for (int i = 0; i < s.length() ; i++)
+        {
+            /**
+             1、首先，判断当前字符是否包含在map中，如果不包含，将该字符添加到map（字符，字符在数组下标）,
+             此时没有出现重复的字符，左指针不需要变化。此时不重复子串的长度为：i-left+1(+1是因为i-left是比较的下标+1才是真实长度)，与原来的maxLen比较，取最大值；
+
+             2、如果当前字符包含在 map中，此时有2类情况：
+             1）当前字符包含在当前有效的子段中，如：abca，当我们遍历到第二个a，当前有效最长子段是 abc，我们又遍历到a，
+             那么此时更新 left 为 map.get(a)+1=1，当前有效子段更新为 bca；
+             2）当前字符不包含在当前最长有效子段中，如：abba，我们先添加a,b进map，此时left=0，我们再添加b，发现map中包含b，
+             而且b包含在最长有效子段中，就是1）的情况，我们更新 left=map.get(b)+1=2，此时子段更新为 b，而且map中仍然包含a，map.get(a)=0；
+             随后，我们遍历到a，发现a包含在map中，且map.get(a)=0，如果我们像1）一样处理，就会发现 left=map.get(a)+1=1，实际上，left此时
+             应该不变，left始终为2，子段变成 ba才对。
+
+             为了处理以上2类情况，我们每次更新left，left=Math.max(left , map.get(ch)+1).
+             另外，更新left后，不管原来的 s.charAt(i) 是否在最长子段中，我们都要将 s.charAt(i) 的位置更新为当前的i，
+             因此此时新的 s.charAt(i) 已经进入到 当前最长的子段中！
+             */
+            if(map.containsKey(s.charAt(i)))
+            {
+                left = Math.max(left , map.get(s.charAt(i))+1);
+            }
+            //不管是否更新left，都要更新 s.charAt(i) 的位置！
+            map.put(s.charAt(i) , i);
+            maxLen = Math.max(maxLen , i-left+1);
+        }
+
+        return maxLen;
+    }
+
+    /*给定一个含有 n 个正整数的数组和一个正整数 target 。
+    找出该数组中满足其和 ≥ target 的长度最小的 连续子数组 [numsl, numsl+1, ..., numsr-1, numsr] ，并返回其长度。如果不存在符合条件的子数组，返回 0*/
+    static int minSubArrayLen(int target, int[] nums) {
+        int left = 0;
+        int sum = 0;
+        int result = Integer.MAX_VALUE;
+        for (int right = 0; right < nums.length; right++) {
+            sum += nums[right];
+            while (sum >= target) {
+                result = Math.min(result, right - left + 1);
+                sum -= nums[left++];
+            }
+        }
+        return result == Integer.MAX_VALUE ? 0 : result;
+    }
+
+    /*给你两个二进制字符串，返回它们的和（用二进制表示）*/
+    static String addBinary(String a, String b){
+        if (a == null || a.length() ==0) return b;
+        if (b == null || a.length() ==0) return a;
+
+        StringBuffer stb = new StringBuffer();
+
+        int i = a.length()-1;
+        int j = b.length()-1;
+
+        int c = 0;
+        while (i >= 0 || j >= 0){
+            if (i >= 0){
+                c += a.charAt(i--) - '0';
+            }
+            if (j >= 0){
+                c += b.charAt(j--) - '0';
+            }
+            // 取余
+            stb.append(c % 2);
+            // 取整 相当于 /2
+            c >>= 1;
+        }
+
+        String string = stb.reverse().toString();
+        return c > 0 ? "1"+string : string;
+    }
+
+    /*给你一个单链表的头节点 head ，请你判断该链表是否为回文链表。如果是，返回 true ；否则，返回 false 。*/
+    static ListNode temp;
+    static boolean isPalindrome(ListNode head) {
+        temp = head;
+        return check(head);
+    }
+    static boolean check(ListNode head) {
+        if (head == null)
+            return true;
+        // temp 从头节点开始， head由于不停的递归，当到最后一个节点时开始，从后往前
+        boolean res = check(head.next) && (temp.val == head.val);
+        temp = temp.next;
+        return res;
+    }
+
+
 
     public static void main(String[] args) {
-        int[] nums = new int[]{1,2,3};
-        List<List<Integer>> list = permute(nums);
-        System.out.println(list.toString());
+        int[] nums = new int[]{6,3,3,4,6,7,8};
+        //List<List<Integer>> list = permute(nums);
+        String a = "10";
+        String b = "11";
+        String s = addBinary(a, b);
+        System.out.println(s);
     }
 }
