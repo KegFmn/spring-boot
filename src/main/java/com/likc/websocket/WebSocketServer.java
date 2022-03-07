@@ -96,23 +96,23 @@ public class WebSocketServer {
                     log.error("toId: {} don't online", toId);
                     //否则不在这个服务器上，发送到mysql或者redis
                 }
-            }catch (Exception e){
+            }catch (IOException e){
                 log.error("inputParams: {} and errorMessage: {}", message, e.getMessage());
             }
         }
     }
 
     /**
+     * 发送错误进入的方法
      *
-     * @param session
-     * @param error
      */
     @OnError
     public void onError(Session session, Throwable error) {
         log.error("userId: {} and errorMessage: {}", this.id, error.getMessage());
     }
+
     /**
-     * 实现服务器主动推送
+     * 实现服务器主动推送消息
      */
     public void sendMessage(String message) {
         try {
