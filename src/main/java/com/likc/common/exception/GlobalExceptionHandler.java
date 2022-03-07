@@ -73,16 +73,4 @@ public class GlobalExceptionHandler {
         return new Result(401, e.getMessage());
     }
 
-    /**
-     * io异常
-     * @param e
-     * @return
-     */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = IOException.class)
-    public Result handler(IOException e){
-        log.error("io异常: ======================={}",e);
-        return new Result(400, e.getMessage());
-    }
-
 }

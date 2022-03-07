@@ -55,14 +55,8 @@ public class WebSocketServer {
             //在线数加1
             addOnlineCount();
         }
-
-        log.info("用户连接:"+id+",当前在线人数为:" + onlineCount);
-
-        try {
-            sendMessage("连接成功");
-        } catch (IOException e) {
-            log.error("用户:"+id+",网络异常!!!!!!");
-        }
+        log.info("userin: {} and onlineCount: {}", id, onlineCount);
+        sendMessage("连接成功");
     }
 
     /**
@@ -75,7 +69,7 @@ public class WebSocketServer {
             //从set中删除
             subOnlineCount();
         }
-        log.info("用户退出:"+ id +",当前在线人数为:" + onlineCount);
+        log.info("userOut: {} and onlineCount: {}", id, onlineCount);
     }
 
     /**
@@ -99,11 +93,11 @@ public class WebSocketServer {
                 if(StringUtils.isNotBlank(toId)&&webSocketMap.containsKey(toId)){
                     webSocketMap.get(toId).sendMessage(objectMapper.writeValueAsString(((ObjectNode)jsonNode)));
                 }else{
-                    log.error("请求的id:"+toId+"不在该服务器上");
+                    log.error("toId: {} don't online", toId);
                     //否则不在这个服务器上，发送到mysql或者redis
                 }
             }catch (Exception e){
-                e.printStackTrace();
+                log.error("inputParams: {} and errorMessage: {}", message, e.getMessage());
             }
         }
     }
@@ -115,26 +109,29 @@ public class WebSocketServer {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("用户错误:"+this.id +",原因:"+error.getMessage());
-        error.printStackTrace();
+        log.error("userId: {} and errorMessage: {}", this.id, error.getMessage());
     }
     /**
      * 实现服务器主动推送
      */
-    public void sendMessage(String message) throws IOException {
-        this.session.getBasicRemote().sendText(message);
+    public void sendMessage(String message) {
+        try {
+            this.session.getBasicRemote().sendText(message);
+        } catch (IOException e) {
+            log.error("inputParams: {} and errorMessage: {}", message, e.getMessage());
+        }
     }
 
 
     /**
      * 单发消息
      * */
-    public static void sendInfo(String message,@PathParam("id") String id) throws IOException {
+    public static void sendInfo(String message,@PathParam("id") String id) {
         //log.info("发送消息到:"+id+"，报文:"+message);
         if(StringUtils.isNotBlank(id) && webSocketMap.containsKey(id)){
-            webSocketMap.get(id).sendMessage(message);
+                webSocketMap.get(id).sendMessage(message);
         }else{
-            log.error("用户"+id+",不在线！");
+            log.error("userId: {} don't online", id);
         }
     }
 
