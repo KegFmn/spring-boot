@@ -225,10 +225,10 @@ public class AcBoy {
 
         Deque<Integer> path = new ArrayDeque<>();
         boolean[] used = new boolean[len];
-        dfs(nums, len, 0, path, used, res);
+        dfs(nums, len, 0, used, path, res);
         return res;
     }
-    private static void dfs(int[] nums, int len, int depth, Deque<Integer> path, boolean[] used, List<List<Integer>> res) {
+    private static void dfs(int[] nums, int len, int depth, boolean[] used, Deque<Integer> path, List<List<Integer>> res) {
         if (depth == len){
             res.add(new ArrayList<>(path));
             return;
@@ -240,11 +240,31 @@ public class AcBoy {
             }
             path.addLast(nums[i]);
             used[i] = true;
-            dfs(nums, len, depth + 1, path, used, res);
+            dfs(nums, len, depth + 1, used, path, res);
             path.removeLast();
             used[i] = false;
         }
+    }
 
+    /**
+     *  求子集
+     *  给你一个整数数组 nums ，数组中的元素 互不相同 。返回该数组所有可能的子集（幂集）
+     * @param nums
+     * @return
+     */
+    static List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> path = new ArrayList<>();
+        dfs(nums, nums.length, 0, path, res);
+        return res;
+    }
+    private static void dfs(int[] nums, int len, int begin, List<Integer> path, List<List<Integer>> res) {
+        res.add(new ArrayList<>(path));
+        for (int i=begin; i<len; i++) {
+            path.add(nums[i]);
+            dfs(nums, len, i+1, path, res);
+            path.remove(path.size()-1);
+        }
     }
 
     /*给你两个字符串 haystack 和 needle ，请你在 haystack 字符串中找出 needle 字符串出现的第一个位置（下标从 0 开始）。如果不存在，则返回  -1*/
@@ -536,6 +556,38 @@ public class AcBoy {
         public int min() {
             return minStack.peek();
         }
+    }
+
+    /**
+     *  给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素
+     *  ^ 异或运算
+     *  任何数和 0做异或运算，结果仍然是原来的数。 a^0 = a
+     *  任何数和其自身做异或运算，结果是 0. a^a = 0
+     *  异或运算满足交换律和结合律。 a^b^a = b^a^a = b^0 = b
+     * @param nums
+     * @return
+     */
+    static int singleNumber(int[] nums) {
+        int res = 0;
+        for(int i : nums){
+            res ^= i;
+        }
+        return res;
+    }
+
+    /**
+     *  编写一个函数，输入是一个无符号整数（以二进制串的形式），返回其二进制表达式中数字位数为 '1' 的个数（也被称为汉明重量）
+     *  n & n-1 消除二进制最右边的一
+     * @param n
+     * @return
+     */
+    static int hammingWeight(int n) {
+        int res = 0;
+        while(n != 0){
+            n &= n-1;
+            res++;
+        }
+        return res;
     }
 
 
