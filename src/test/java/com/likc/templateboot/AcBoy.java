@@ -13,7 +13,7 @@ public class AcBoy {
     /**
      *  链表对象
      */
-    static class ListNode {
+    class ListNode {
       int val;
       ListNode next;
       ListNode() {};
@@ -22,7 +22,7 @@ public class AcBoy {
     }
 
     /*两数之和等于target，返回两数数组下标*/
-    static int[] sumOfTwoNum(int[] nums){
+    int[] sumOfTwoNum(int[] nums){
         int target = 5;
         HashMap<Integer, Integer> hashMap = new HashMap<>();
         for(int i = 0; i< nums.length; i++) {
@@ -35,7 +35,7 @@ public class AcBoy {
     }
 
     /*回文数，判断返回boolen*/
-    static Boolean sameNumberAtBeginningEnd(int num){
+    Boolean sameNumberAtBeginningEnd(int num){
         if (num < 0 || (num % 10 == 0 && num != 0)) {
             return false;
         }
@@ -51,7 +51,7 @@ public class AcBoy {
     }
 
     /*罗马数字转整数*/
-    static int romanTransformNum(String str){
+    int romanTransformNum(String str){
         HashMap<Character, Integer> hashMap = new HashMap<>();
         hashMap.put('I', 1);
         hashMap.put('V', 5);
@@ -76,7 +76,7 @@ public class AcBoy {
     }
 
     /*最长公共前缀*/
-    static String longPrefix(String[] strs){
+    String longPrefix(String[] strs){
         if (strs == null || strs.length == 0) {
             return " ";
         }
@@ -95,7 +95,7 @@ public class AcBoy {
     }
 
     /*有效的括号*/
-    static Boolean efficientBrackets(String s){
+    Boolean efficientBrackets(String s){
 
         int n = s.length();
         if (n % 2 == 1) {
@@ -125,7 +125,7 @@ public class AcBoy {
     }
 
     /*合并两个有序链表*/
-    static ListNode orderListNode(ListNode list1, ListNode list2){
+    ListNode orderListNode(ListNode list1, ListNode list2){
         if(list1 == null) {
             return list2;
         } else if(list2 == null) {
@@ -140,7 +140,7 @@ public class AcBoy {
     }
 
     /*删除数组重复项，返回新数组长度，不考虑新长度后面的数组*/
-    static int deletRepeatArray(int[] nums){
+    int deletRepeatArray(int[] nums){
         if(nums == null || nums.length == 0) {
             return 0;
         }
@@ -159,7 +159,7 @@ public class AcBoy {
     }
 
     /*给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度*/
-    static int removeElement(int[] nums, int val) {
+    int removeElement(int[] nums, int val) {
         if(nums == null || nums.length == 0) {
             return 0;
         }
@@ -178,7 +178,7 @@ public class AcBoy {
     }
 
     /*输入的字符串反转过来，输入字符串以字符数组的形式给出*/
-    static void reverseString(char[] s) {
+    void reverseString(char[] s) {
         int n = s.length;
         for(int left = 0, right = n - 1 ; left < right; left++, right--){
             char temp = s[left];
@@ -188,7 +188,7 @@ public class AcBoy {
     }
 
     /*给定一个字符串，验证它是否是回文串，只考虑字母和数字字符，可以忽略字母的大小写*/
-    static boolean isPalindrome(String s) {
+    boolean isPalindrome(String s) {
         int n = 0;
         int m = s.length() - 1;
 
@@ -216,7 +216,7 @@ public class AcBoy {
     *         已经选了什么数  path
     *         布尔数组       used
     * */
-    static List<List<Integer>> permute(int[] nums) {
+    List<List<Integer>> permute(int[] nums) {
         int len = nums.length;
         List<List<Integer>> res = new ArrayList<>();
         if (len == 0) {
@@ -228,7 +228,7 @@ public class AcBoy {
         dfs(nums, len, 0, used, path, res);
         return res;
     }
-    private static void dfs(int[] nums, int len, int depth, boolean[] used, Deque<Integer> path, List<List<Integer>> res) {
+    private void dfs(int[] nums, int len, int depth, boolean[] used, Deque<Integer> path, List<List<Integer>> res) {
         if (depth == len){
             res.add(new ArrayList<>(path));
             return;
@@ -252,13 +252,13 @@ public class AcBoy {
      * @param nums
      * @return
      */
-    static List<List<Integer>> subsets(int[] nums) {
+    List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> path = new ArrayList<>();
         dfs(nums, nums.length, 0, path, res);
         return res;
     }
-    private static void dfs(int[] nums, int len, int begin, List<Integer> path, List<List<Integer>> res) {
+    private void dfs(int[] nums, int len, int begin, List<Integer> path, List<List<Integer>> res) {
         res.add(new ArrayList<>(path));
         for (int i=begin; i<len; i++) {
             path.add(nums[i]);
@@ -268,7 +268,7 @@ public class AcBoy {
     }
 
     /*给你两个字符串 haystack 和 needle ，请你在 haystack 字符串中找出 needle 字符串出现的第一个位置（下标从 0 开始）。如果不存在，则返回  -1*/
-    static int strStr(String haystack, String needle) {
+    int strStr(String haystack, String needle) {
         int n = haystack.length(), m = needle.length();
         // i+m 的意思是匹配到原字符串剩余长度不足匹配字符串时停止
         for (int i = 0; i + m <= n; i++) {
@@ -293,7 +293,7 @@ public class AcBoy {
      *@param key 待查找关键字
      *@return 找到的位置
      */
-    static int binarySearch(int[] ints, int key, int low, int high){
+    int binarySearch(int[] ints, int key, int low, int high){
         if (key < ints[low] || key > ints[high] || low > high){
             return -1;
         }
@@ -309,7 +309,7 @@ public class AcBoy {
     }
 
     /*冒泡排序*/
-    static int[] bubbingSort(int[] nums){
+    int[] bubbingSort(int[] nums){
         if (nums.length == 0 || nums == null){
             return null;
         }
@@ -328,7 +328,7 @@ public class AcBoy {
     }
 
     /*递归快速排序*/
-    static int[] fastSort(int[] nums, int left, int right){
+    int[] fastSort(int[] nums, int left, int right){
         int i, j, t, temp;
         if(left > right){
             return null;
@@ -357,7 +357,7 @@ public class AcBoy {
         return nums;
     }
     
-    static ListNode twoNumAdd(ListNode l1, ListNode l2){
+    ListNode twoNumAdd(ListNode l1, ListNode l2){
         // 初始化头结点，我们需要的结果是pre.next
         ListNode pre = new ListNode(0);
         // 将cur同样指向pre所指向的地址
@@ -399,7 +399,7 @@ public class AcBoy {
     }
 
     /*最长不重复子串*/
-    static int lengthOfLongestSubstring(String s){
+    int lengthOfLongestSubstring(String s){
         HashMap<Character, Integer> map = new HashMap<>();
         int maxLen = 0;//用于记录最大不重复子串的长度
         int left = 0;//滑动窗口左指针
@@ -435,7 +435,7 @@ public class AcBoy {
 
     /*给定一个含有 n 个正整数的数组和一个正整数 target 。
     找出该数组中满足其和 ≥ target 的长度最小的 连续子数组 [numsl, numsl+1, ..., numsr-1, numsr] ，并返回其长度。如果不存在符合条件的子数组，返回 0*/
-    static int minSubArrayLen(int target, int[] nums) {
+    int minSubArrayLen(int target, int[] nums) {
         int left = 0;
         int sum = 0;
         int result = Integer.MAX_VALUE;
@@ -450,7 +450,7 @@ public class AcBoy {
     }
 
     /*给你两个二进制字符串，返回它们的和（用二进制表示）*/
-    static String addBinary(String a, String b){
+    String addBinary(String a, String b){
         if (a == null || a.length() ==0) return b;
         if (b == null || a.length() ==0) return a;
 
@@ -478,12 +478,12 @@ public class AcBoy {
     }
 
     /*给你一个单链表的头节点 head ，请你判断该链表是否为回文链表。如果是，返回 true ；否则，返回 false 。*/
-    static ListNode temp;
-    static boolean isPalindrome(ListNode head) {
+    ListNode temp;
+    boolean isPalindrome(ListNode head) {
         temp = head;
         return check(head);
     }
-    static boolean check(ListNode head) {
+    boolean check(ListNode head) {
         if (head == null)
             return true;
         // temp 从头节点开始， head由于不停的递归，当到最后一个节点时开始，从后往前
@@ -567,7 +567,7 @@ public class AcBoy {
      * @param nums
      * @return
      */
-    static int singleNumber(int[] nums) {
+    int singleNumber(int[] nums) {
         int res = 0;
         for(int i : nums){
             res ^= i;
@@ -581,7 +581,7 @@ public class AcBoy {
      * @param n
      * @return
      */
-    static int hammingWeight(int n) {
+    int hammingWeight(int n) {
         int res = 0;
         while(n != 0){
             n &= n-1;
@@ -591,12 +591,17 @@ public class AcBoy {
     }
 
 
+    /**
+     *  主方法
+     * @param args
+     */
     public static void main(String[] args) {
+        AcBoy acBoy = new AcBoy();
         int[] nums = new int[]{6,3,3,4,6,7,8};
-        //List<List<Integer>> list = permute(nums);
         String a = "10";
         String b = "11";
-        String s = addBinary(a, b);
+        String s = acBoy.addBinary(a, b);
         System.out.println(s);
+
     }
 }
