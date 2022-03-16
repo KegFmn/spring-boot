@@ -78,7 +78,7 @@ public class SwaggerConfig {
                 new Contact("likc", "https://blog.csdn.net/weixin_47357245?spm=1000.2115.3001.5343", "1165624857@qq.com"), // 作者信息
                 "Apache 2.0", // 许可
                 "http://www.apache.org/licenses/LICENSE-2.0", // 许可连接
-                new ArrayList() // 扩展
+                new ArrayList<>() // 扩展
         );
     }
 }
