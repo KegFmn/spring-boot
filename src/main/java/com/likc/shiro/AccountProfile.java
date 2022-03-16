@@ -1,9 +1,6 @@
 package com.likc.shiro;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -13,9 +10,10 @@ import java.io.Serializable;
  * @Description: 返回前端的封装用户信息
  */
 @Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class AccountProfile implements Serializable {
 
     private Long id;

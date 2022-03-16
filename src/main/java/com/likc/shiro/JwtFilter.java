@@ -46,11 +46,10 @@ public class JwtFilter extends AuthenticatingFilter {
 
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         String jwt = request.getHeader("Authorization");
-        // 当请求头的token为空, 返回空否则生成jwt
-        if (StringUtils.isBlank(jwt)){
+        // 当请求头的token为空,，返回空否则生成jwt
+        if (StringUtils.isEmpty(jwt)){
             return null;
         }
-
 
         return new JwtToken(jwt);
     }
@@ -67,8 +66,8 @@ public class JwtFilter extends AuthenticatingFilter {
 
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         String jwt = request.getHeader("Authorization");
-        // 当请求头的token为空，放行去Controller由@注解拦截
-        if (StringUtils.isBlank(jwt)){
+        // 当请求头的token为空，放行去Controller生成jwt给前端
+        if (StringUtils.isEmpty(jwt)){
             return true;
         }else {
             // 校验jwt
@@ -77,7 +76,7 @@ public class JwtFilter extends AuthenticatingFilter {
                 throw new ExpiredCredentialsException("token已失效，请重新登录");
             }
 
-            // 执行登录
+            // 执行登录 去到 AccountRealm作身份校验
             return executeLogin(servletRequest,servletResponse);
         }
     }
@@ -98,7 +97,7 @@ public class JwtFilter extends AuthenticatingFilter {
         try {
             Throwable throwable = e.getCause() == null ? e : e.getCause();
 
-            Result result = new Result(400, throwable.getMessage());
+            Result<Object> result = new Result<>(400, throwable.getMessage());
 
             String json = objectMapper.writeValueAsString(result);
             httpServletResponse.getWriter().print(json);

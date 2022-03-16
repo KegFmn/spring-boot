@@ -41,28 +41,30 @@ public class ShiroConfig {
     @Bean
     public SessionManager sessionManager(RedisSessionDAO redisSessionDAO) {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-
-        // inject redisSessionDAO
         sessionManager.setSessionDAO(redisSessionDAO);
-
-        // other stuff...
-
         return sessionManager;
     }
 
+    /**
+     *  关联securityManager与ShiroFilterFactoryBean与ShiroFilterChainDefinition
+     * @param accountRealm
+     * @param sessionManager
+     * @param redisCacheManager
+     * @return
+     */
     @Bean
     public DefaultWebSecurityManager securityManager(AccountRealm accountRealm,
                                                      SessionManager sessionManager,
                                                      RedisCacheManager redisCacheManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager(accountRealm);
-
-        //inject sessionManager
         securityManager.setSessionManager(sessionManager);
 
-        // inject redisCacheManager
+        // redis中针对不同用户缓存(此处的id需要对应user实体中的id字段,用于唯一标识)
+        redisCacheManager.setPrincipalIdFieldName("id");
         securityManager.setCacheManager(redisCacheManager);
+
         /*
-         * 关闭shiro自带的session，详情见文档
+         * 关闭shiro自带的session，完全使用jwt校验
          */
         DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
         DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
@@ -70,55 +72,33 @@ public class ShiroConfig {
         subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
         securityManager.setSubjectDAO(subjectDAO);
 
-        // 解决druid监控冲突引起的securityManager没有绑定到ThreadContext
-        ThreadContext.bind(securityManager);
-
         return securityManager;
     }
-
-    @Bean
-    public ShiroFilterChainDefinition shiroFilterChainDefinition() {
-        DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
-        Map<String, String> filterMap = new LinkedHashMap<>();
-        // 主要通过注解方式校验权限
-        filterMap.put("/**", "jwt");
-        chainDefinition.addPathDefinitions(filterMap);
-        return chainDefinition;
-    }
-
     @Bean("shiroFilterFactoryBean")
     public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager,
                                                          ShiroFilterChainDefinition shiroFilterChainDefinition) {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
+        //shiroFilterFactoryBean与securityManager关联
         shiroFilter.setSecurityManager(securityManager);
 
         Map<String, Filter> filters = new HashMap<>();
+        // 添加自定义拦截器jwtFilter到shiro的内置拦截过滤器
         filters.put("jwt", jwtFilter);
         shiroFilter.setFilters(filters);
 
         Map<String, String> filterMap = shiroFilterChainDefinition.getFilterChainMap();
+        // shiroFilterFactoryBean与shiroFilterChainDefinition关联
         shiroFilter.setFilterChainDefinitionMap(filterMap);
         return shiroFilter;
     }
-
-    // 开启注解代理（默认好像已经开启，可以不要）
-    //@Bean
-    //public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager){
-    //    AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-    //    authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
-    //    return authorizationAttributeSourceAdvisor;
-    //}
-
     @Bean
-    public static DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator(){
-        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator=new DefaultAdvisorAutoProxyCreator();
-        /**
-         * setUsePrefix(false)用于解决一个奇怪的bug。在引入spring aop的情况下。
-         * 在@Controller注解的类的方法中加入@RequiresRole等shiro注解，会导致该方法无法映射请求，导致返回404。
-         * 加入这项配置能解决这个bug
-         */
-        //defaultAdvisorAutoProxyCreator.setUsePrefix(true);
-        return defaultAdvisorAutoProxyCreator;
+    public ShiroFilterChainDefinition shiroFilterChainDefinition() {
+        DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
+        Map<String, String> filterMap = new LinkedHashMap<>();
+        // 所有请求都通过自定义的jwtFilter拦截器
+        filterMap.put("/**", "jwt");
+        chainDefinition.addPathDefinitions(filterMap);
+        return chainDefinition;
     }
 
 }

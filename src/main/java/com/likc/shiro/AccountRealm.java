@@ -1,16 +1,21 @@
 package com.likc.shiro;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.likc.po.User;
 import com.likc.service.UserService;
 import com.likc.util.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @Author: likc
@@ -34,17 +39,6 @@ public class AccountRealm extends AuthorizingRealm {
     }
 
     /**
-     *  授权
-     *  只有当需要检测用户权限的时候才会调用此方法，例如checkRole,checkPermission之类的
-     * @param principals
-     * @return
-     */
-    @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        return null;
-    }
-
-    /**
      *  身份验证（密码校验）
      * @param token
      * @return
@@ -57,7 +51,6 @@ public class AccountRealm extends AuthorizingRealm {
         log.info("jwt----------------->{}", jwtToken);
 
         String userId = jwtUtils.getClaimByToken((String) jwtToken.getPrincipal()).getSubject();
-
         User user = userService.getById(Long.parseLong(userId));
 
         if (user == null){
@@ -73,6 +66,33 @@ public class AccountRealm extends AuthorizingRealm {
 
         log.info("profile----------------->{}", profile.toString());
 
+        //profile消息体、getCredentials获取密钥、getName()其实就是这个自定义类的名字，之后拿到用户信息去doGetAuthorizationInfo查权限
         return new SimpleAuthenticationInfo(profile, jwtToken.getCredentials(), getName());
+    }
+
+    /**
+     *  授权
+     *  只有当需要检测用户权限的时候才会调用此方法，例如checkRole,checkPermission之类的
+     * @param principalCollection
+     * @return
+     */
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        log.info("授权");
+        // 数据库获取权限
+        /*Object primaryPrincipal = principalCollection.getPrimaryPrincipal();
+        AccountProfile accountProfile=(AccountProfile) primaryPrincipal;
+        User user = userService.getOne(new QueryWrapper<User>().eq("userName", accountProfile.getUserName()));
+        if(user != null){
+
+            SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+            Set<String> set= new HashSet<>();
+            //这里数据库表没有建roles字段，为了演示就直接写个admin角色了。（以后用在建表时把roles字段加上，然后取过来放在这里就能赋予角色了）
+            set.add("admin");
+            authorizationInfo.setRoles(set);
+            // 返回给shiro
+            return authorizationInfo;
+        }*/
+        return null;
     }
 }
