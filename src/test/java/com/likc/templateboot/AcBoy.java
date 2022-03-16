@@ -1,8 +1,10 @@
 package com.likc.templateboot;
 
+import com.alibaba.druid.sql.visitor.functions.Char;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigInteger;
 import java.time.Instant;
 import java.util.*;
 
@@ -107,36 +109,54 @@ public class AcBoy {
         hashMap.put('}','{');
         hashMap.put(']','[');
 
-        Deque<Character> list = new LinkedList<>();
+        Deque<Character> stack = new LinkedList<>();
 
         for (int i = 0; i < n; i++) {
             char a = s.charAt(i);
             // hashmap包含弹出，如果栈为空，或者栈的第一个不等于对应的括号则不是有效括号
             if (hashMap.containsKey(a)) {
-                if (list.isEmpty() || list.peek() != hashMap.get(a)) {
+                if (stack.isEmpty() || stack.peekFirst() != hashMap.get(a)) {
                     return false;
                 }
-                list.pop();
+                stack.pollFirst();
             } else {
-                list.push(a);
+                stack.addFirst(a);
             }
         }
-        return list.isEmpty();
+        return stack.isEmpty();
     }
 
     /*合并两个有序链表*/
     ListNode orderListNode(ListNode list1, ListNode list2){
-        if(list1 == null) {
+        if (list1 == null){
             return list2;
-        } else if(list2 == null) {
+        } else if (list2 == null){
             return list1;
-        } else if(list1.val < list2.val) {
+        } else if (list1.val < list2.val){
             list1.next = orderListNode(list1.next, list2);
             return list1;
         } else {
-            list2.next = orderListNode(list1 , list2.next);
+            list2.next = orderListNode(list1, list2.next);
             return list2;
         }
+    }
+
+    /**
+     * 反转链表
+     * @param nums
+     * @return
+     */
+    ListNode reverListNode(ListNode l1){
+        ListNode head = null;
+        ListNode curr = l1;
+
+        while (curr != null){
+            ListNode temp = curr.next;
+            curr.next = head;
+            head = curr;
+            curr = temp;
+        }
+        return head;
     }
 
     /*删除数组重复项，返回新数组长度，不考虑新长度后面的数组*/
@@ -260,14 +280,14 @@ public class AcBoy {
     }
     private void dfs(int[] nums, int len, int begin, List<Integer> path, List<List<Integer>> res) {
         res.add(new ArrayList<>(path));
-        for (int i=begin; i<len; i++) {
+        for (int i = begin; i < len; i++) {
             path.add(nums[i]);
             dfs(nums, len, i+1, path, res);
             path.remove(path.size()-1);
         }
     }
 
-    /*给你两个字符串 haystack 和 needle ，请你在 haystack 字符串中找出 needle 字符串出现的第一个位置（下标从 0 开始）。如果不存在，则返回  -1*/
+    /*给你两个字符串haystack 和 needle ，请你在 haystack 字符串中找出 needle 字符串出现的第一个位置（下标从 0 开始）。如果不存在，则返回 -1*/
     int strStr(String haystack, String needle) {
         int n = haystack.length(), m = needle.length();
         // i+m 的意思是匹配到原字符串剩余长度不足匹配字符串时停止
@@ -380,11 +400,11 @@ public class AcBoy {
             // 将cur的指向地址改为ListNode z，形成pre->cur的局面
             cur = cur.next;
 
-            // 不为空节点后移
+            // 不为空节点前移
             if (l1 != null){
                 l1 = l1.next;
             }
-            // 不为空节点后移
+            // 不为空节点前移
             if (l2 != null){
                 l2 = l2.next;
             }
@@ -403,26 +423,24 @@ public class AcBoy {
         HashMap<Character, Integer> map = new HashMap<>();
         int maxLen = 0;//用于记录最大不重复子串的长度
         int left = 0;//滑动窗口左指针
-        for (int i = 0; i < s.length() ; i++)
-        {
-            /**
-             1、首先，判断当前字符是否包含在map中，如果不包含，将该字符添加到map（字符，字符在数组下标）,
-             此时没有出现重复的字符，左指针不需要变化。此时不重复子串的长度为：i-left+1(+1是因为i-left是比较的下标+1才是真实长度)，与原来的maxLen比较，取最大值；
+        for (int i = 0; i < s.length() ; i++) {
+             /*
+                 1、首先，判断当前字符是否包含在map中，如果不包含，将该字符添加到map（字符，字符在数组下标）,
+                 此时没有出现重复的字符，左指针不需要变化。此时不重复子串的长度为：i-left+1(+1是因为i-left是比较的下标+1才是真实长度)，与原来的maxLen比较，取最大值；
 
-             2、如果当前字符包含在 map中，此时有2类情况：
-             1）当前字符包含在当前有效的子段中，如：abca，当我们遍历到第二个a，当前有效最长子段是 abc，我们又遍历到a，
-             那么此时更新 left 为 map.get(a)+1=1，当前有效子段更新为 bca；
-             2）当前字符不包含在当前最长有效子段中，如：abba，我们先添加a,b进map，此时left=0，我们再添加b，发现map中包含b，
-             而且b包含在最长有效子段中，就是1）的情况，我们更新 left=map.get(b)+1=2，此时子段更新为 b，而且map中仍然包含a，map.get(a)=0；
-             随后，我们遍历到a，发现a包含在map中，且map.get(a)=0，如果我们像1）一样处理，就会发现 left=map.get(a)+1=1，实际上，left此时
-             应该不变，left始终为2，子段变成 ba才对。
+                 2、如果当前字符包含在 map中，此时有2类情况：
+                 1）当前字符包含在当前有效的子段中，如：abca，当我们遍历到第二个a，当前有效最长子段是 abc，我们又遍历到a，
+                 那么此时更新 left 为 map.get(a)+1=1，当前有效子段更新为 bca；
+                 2）当前字符不包含在当前最长有效子段中，如：abba，我们先添加a,b进map，此时left=0，我们再添加b，发现map中包含b，
+                 而且b包含在最长有效子段中，就是1）的情况，我们更新 left=map.get(b)+1=2，此时子段更新为 b，而且map中仍然包含a，map.get(a)=0；
+                 随后，我们遍历到a，发现a包含在map中，且map.get(a)=0，如果我们像1）一样处理，就会发现 left=map.get(a)+1=1，实际上，left此时
+                 应该不变，left始终为2，子段变成 ba才对。
 
-             为了处理以上2类情况，我们每次更新left，left=Math.max(left , map.get(ch)+1).
-             另外，更新left后，不管原来的 s.charAt(i) 是否在最长子段中，我们都要将 s.charAt(i) 的位置更新为当前的i，
-             因此此时新的 s.charAt(i) 已经进入到 当前最长的子段中！
+                 为了处理以上2类情况，我们每次更新left，left=Math.max(left , map.get(ch)+1).
+                 另外，更新left后，不管原来的 s.charAt(i) 是否在最长子段中，我们都要将 s.charAt(i) 的位置更新为当前的i，
+                 因此此时新的 s.charAt(i) 已经进入到 当前最长的子段中！
              */
-            if(map.containsKey(s.charAt(i)))
-            {
+            if(map.containsKey(s.charAt(i))) {
                 left = Math.max(left , map.get(s.charAt(i))+1);
             }
             //不管是否更新left，都要更新 s.charAt(i) 的位置！
@@ -433,8 +451,8 @@ public class AcBoy {
         return maxLen;
     }
 
-    /*给定一个含有 n 个正整数的数组和一个正整数 target 。
-    找出该数组中满足其和 ≥ target 的长度最小的 连续子数组 [numsl, numsl+1, ..., numsr-1, numsr] ，并返回其长度。如果不存在符合条件的子数组，返回 0*/
+    /*给定一个含有n个正整数的数组和一个正整数 target 。
+    找出该数组中满足其和 ≥ target 的长度最小的 连续子数组[numsl, numsl+1, ..., numsr-1, numsr] ，并返回其长度。如果不存在符合条件的子数组，返回 0*/
     int minSubArrayLen(int target, int[] nums) {
         int left = 0;
         int sum = 0;
@@ -590,6 +608,85 @@ public class AcBoy {
         return res;
     }
 
+    /**
+     *  字符串按字段排序，并统计出现次数
+     */
+    void sortDict(){
+        String str = "fasfasdfa";
+        List<Character> list = new ArrayList<>();
+        for (int i = 0; i < str.length(); i++){
+            list.add(str.charAt(i));
+        }
+        Collections.sort(list);
+        Map<Character, Integer> map = new HashMap<>();
+        for (Character cha : list){
+            if (map.containsKey(cha)){
+                map.put(cha, map.get(cha)+1);
+            }else {
+                map.put(cha, 1);
+            }
+        }
+
+        Set<Map.Entry<Character, Integer>> set = map.entrySet();
+        for (Map.Entry entry : set){
+            System.out.println("字符:" + entry.getKey() + "出现次数:" + entry.getValue());
+        }
+    }
+
+    /**
+     *  超大整数相加
+     * @param strs
+     * @return
+     */
+    BigInteger sumBigInt(String[] strs){
+        BigInteger bigInteger1 = new BigInteger(strs[0]);
+        BigInteger bigInteger2 = new BigInteger(strs[1]);
+
+        BigInteger add = bigInteger1.add(bigInteger2);
+
+        System.out.println(add);
+        return null;
+    }
+
+    /**
+     *   消除相邻相同的字符，最后还有数字就返回true，否则返回false
+     * @param str
+     * @return
+     */
+    boolean removeSame(String str){
+        Deque<Character> stack = new LinkedList<>();
+        for (int i = 0; i < str.length(); i++){
+            char chr = str.charAt(i);
+            if (!stack.isEmpty()){
+                if (stack.peekFirst() == chr){
+                    stack.pollFirst();
+                    continue;
+                }
+            }
+            stack.addFirst(chr);
+        }
+        return !stack.isEmpty();
+    }
+
+    /**
+     *  找出数组中任意一个重复的数字-O(1)空间复杂度实现
+     */
+    int repeatInt(int[] nums){
+        for (int i = 0; i < nums.length; i++){
+            while (nums[i] != i){
+                if (nums[i] == nums[nums[i]]){
+                    return nums[i];
+                }else {
+                    int temp = nums[i];
+                    nums[i] = nums[nums[i]];
+                    nums[temp] = temp;
+                }
+            }
+        }
+        return 0;
+    }
+
+
 
     /**
      *  主方法
@@ -597,11 +694,8 @@ public class AcBoy {
      */
     public static void main(String[] args) {
         AcBoy acBoy = new AcBoy();
-        int[] nums = new int[]{6,3,3,4,6,7,8};
-        String a = "10";
-        String b = "11";
-        String s = acBoy.addBinary(a, b);
-        System.out.println(s);
-
+        int[] nums = new int[]{1,2,2,3,3};
+        int array = acBoy.deletRepeatArray(nums);
+        System.out.println(array);
     }
 }
