@@ -22,9 +22,9 @@ public class WebSocketController {
      * @return
      */
     @RequestMapping("/socket/push/{cid}")
-    public Result pushToOne(@PathVariable String cid, String message) throws IOException {
+    public Result<Object> pushToOne(@PathVariable String cid, String message) throws IOException {
         WebSocketServer.sendInfo(message, cid);
-        return new Result(200, "推送成功");
+        return new Result<>(200, "推送成功");
     }
 
     /**
@@ -33,8 +33,8 @@ public class WebSocketController {
      * @return
      */
     @RequestMapping("/socket/push")
-    public Result pushToAll(String message) throws IOException {
+    public Result<Object> pushToAll(String message) throws IOException {
         WebSocketServer.sendAll(message);
-        return new Result(200, "推送成功");
+        return new Result<>(200, "推送成功");
     }
 }
