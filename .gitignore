@@ -22,14 +22,14 @@ target/
 ### NetBeans ###
 /nbproject/private/
 build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
 mvnw.cmd
 mvnw
-.mvn/
-logs/
+/.mvn
+/logs
 !**/src/main/**/build/
 !**/src/test/**/build/
 
