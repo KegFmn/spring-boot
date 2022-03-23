@@ -9,10 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.math.BigInteger;
+import java.util.*;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // websocket测试必加，因为需要真实的tomcat
@@ -55,6 +53,32 @@ class TemplateBootApplicationTests {
         int c = 10;
         c>>=1;
         System.out.println(c);
+        Deque<Integer> integers = new ArrayDeque<>();
+        integers.addLast(12);
+        integers.peekFirst();
+
+        Deque<Object> list = new LinkedList<>();
+
+
+    }
+
+    @Test
+    void Test(){
+        String str = "addc";
+        Deque<Character> stack = new LinkedList<>();
+
+
+        for (int i = 0; i < str.length(); i++){
+            char chr = str.charAt(i);
+            if (!stack.isEmpty()){
+                if (stack.peekFirst() == chr){
+                    stack.pollFirst();
+                    continue;
+                }
+            }
+            stack.addFirst(chr);
+        }
+        System.out.println(!stack.isEmpty());
     }
 
 }
