@@ -2,6 +2,7 @@ package com.likc.service;
 
 import com.likc.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.scheduling.annotation.Async;
 
 /**
  * <p>
@@ -12,5 +13,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-02-15
  */
 public interface UserService extends IService<User> {
+
+    @Async(value = "Executor")
+    void asyntest();
 
 }

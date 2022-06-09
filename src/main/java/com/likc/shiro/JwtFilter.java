@@ -94,11 +94,12 @@ public class JwtFilter extends AuthenticatingFilter {
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
 
         HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+
+        Throwable throwable = e.getCause() == null ? e : e.getCause();
+
+        Result<Void> result = new Result<>(400, throwable.getMessage());
+
         try {
-            Throwable throwable = e.getCause() == null ? e : e.getCause();
-
-            Result<Object> result = new Result<>(400, throwable.getMessage());
-
             String json = objectMapper.writeValueAsString(result);
             httpServletResponse.getWriter().print(json);
         } catch (Exception exception) {

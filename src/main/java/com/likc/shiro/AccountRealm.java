@@ -66,7 +66,7 @@ public class AccountRealm extends AuthorizingRealm {
 
         log.info("profile----------------->{}", profile.toString());
 
-        //profile消息体、getCredentials获取密钥、getName()其实就是这个自定义类的名字，之后拿到用户信息去doGetAuthorizationInfo查权限
+        //profile消息体、getCredentials获取密钥、getName()其实就是这个自定义类的名字，校验成功后放行到Controller
         return new SimpleAuthenticationInfo(profile, jwtToken.getCredentials(), getName());
     }
 

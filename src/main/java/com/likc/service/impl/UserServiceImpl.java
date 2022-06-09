@@ -17,4 +17,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
+    @Override
+    public void asyntest() {
+        try {
+            System.out.println("异步入库开始");
+            Thread.sleep(10000);
+            System.out.println("异步入库结束");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
