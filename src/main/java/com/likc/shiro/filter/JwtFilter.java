@@ -1,15 +1,18 @@
-package com.likc.shiro;
+package com.likc.shiro.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likc.common.lang.Result;
+import com.likc.shiro.JwtToken;
 import com.likc.util.JwtUtils;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExpiredCredentialsException;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
+import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  * @Date: 2022/02/15/20:36
  * @Description: shiro过滤器
  */
+@Slf4j
 @Component
 public class JwtFilter extends AuthenticatingFilter {
 
@@ -35,27 +39,7 @@ public class JwtFilter extends AuthenticatingFilter {
     private ObjectMapper objectMapper;
 
     /**
-     *  实现登录生成我们自定义支持的JwtToken
-     * @param servletRequest
-     * @param servletResponse
-     * @return
-     * @throws Exception
-     */
-    @Override
-    protected AuthenticationToken createToken(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
-
-        HttpServletRequest request = (HttpServletRequest)servletRequest;
-        String jwt = request.getHeader("Authorization");
-        // 当请求头的token为空,，返回空否则生成jwt
-        if (StringUtils.isEmpty(jwt)){
-            return null;
-        }
-
-        return new JwtToken(jwt);
-    }
-
-    /**
-     *  拦截校验，当头部没有Authorization时候，直接通过，不需要自动登录；当带有的时候，校验jwt的有效性，没问题就直接执行executeLogin方法实现自动登录
+     *  请求拦截，当头部没有Authorization时候，直接通过，不需要自动登录；当带有的时候，校验jwt的有效性，没问题就直接执行executeLogin方法实现自动登录
      * @param servletRequest
      * @param servletResponse
      * @return
@@ -63,10 +47,10 @@ public class JwtFilter extends AuthenticatingFilter {
      */
     @Override
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
-
+        log.info("----->请求拦截");
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         String jwt = request.getHeader("Authorization");
-        // 当请求头的token为空，放行去Controller生成jwt给前端
+        // 当请求头的token为空，放行去Controller校验权限
         if (StringUtils.isEmpty(jwt)){
             return true;
         }else {
@@ -76,9 +60,29 @@ public class JwtFilter extends AuthenticatingFilter {
                 throw new ExpiredCredentialsException("token已失效，请重新登录");
             }
 
-            // 执行登录 去到 AccountRealm作身份校验
+            // 去到createToken()生成jwt之后到AccountRealm的doGetAuthenticationInfo()作身份校验
             return executeLogin(servletRequest,servletResponse);
         }
+    }
+
+    /**
+     *  实现登录生成我们自定义支持的JwtToken
+     * @param servletRequest
+     * @param servletResponse
+     * @return
+     * @throws Exception
+     */
+    @Override
+    protected AuthenticationToken createToken(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
+        log.info("----->生成jwt");
+        HttpServletRequest request = (HttpServletRequest)servletRequest;
+        String jwt = request.getHeader("Authorization");
+        // 当请求头的token为空,，返回空否则生成jwt
+        if (StringUtils.isEmpty(jwt)){
+            return null;
+        }
+
+        return new JwtToken(jwt);
     }
 
 
@@ -92,7 +96,7 @@ public class JwtFilter extends AuthenticatingFilter {
      */
     @Override
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
-
+        log.info("onLoginFailure");
         HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 
         Throwable throwable = e.getCause() == null ? e : e.getCause();

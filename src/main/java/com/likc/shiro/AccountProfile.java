@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * @Author: likc
  * @Date: 2022/02/15/21:46
- * @Description: 返回前端的封装用户信息
+ * @Description:
  */
 @Data
 @Getter
