@@ -1,8 +1,11 @@
 package com.likc.shiro;
 
+import com.auth0.jwt.interfaces.Claim;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.likc.po.User;
 import com.likc.service.UserService;
+import com.likc.shiro.AccountProfile;
+import com.likc.shiro.JwtToken;
 import com.likc.util.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
@@ -15,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -48,9 +52,9 @@ public class AccountRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 
         JwtToken jwtToken = (JwtToken)token;
-        log.info("jwt----------------->{}", jwtToken);
 
-        String userId = jwtUtils.getClaimByToken((String) jwtToken.getPrincipal()).getSubject();
+        Map<String, Claim> claimMap = jwtUtils.getClaimByToken((String) jwtToken.getPrincipal());
+        String userId = claimMap.get("id").asString();
         User user = userService.getById(Long.parseLong(userId));
 
         if (user == null){
@@ -63,8 +67,6 @@ public class AccountRealm extends AuthorizingRealm {
 
         AccountProfile profile = new AccountProfile();
         BeanUtils.copyProperties(user, profile);
-
-        log.info("profile----------------->{}", profile.toString());
 
         //profile消息体、getCredentials获取密钥、getName()其实就是这个自定义类的名字，校验成功后放行到Controller
         return new SimpleAuthenticationInfo(profile, jwtToken.getCredentials(), getName());

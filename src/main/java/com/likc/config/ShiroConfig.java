@@ -1,23 +1,16 @@
 package com.likc.config;
 
-import com.likc.shiro.AccountRealm;
+import com.likc.shiro.CustomCredentialsMatcher;
 import com.likc.shiro.JwtFilter;
+import com.likc.shiro.AccountRealm;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
-import org.apache.shiro.mgt.SessionsSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.session.mgt.SessionManager;
-import org.apache.shiro.spring.LifecycleBeanPostProcessor;
-import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-import org.crazycake.shiro.RedisCacheManager;
-import org.crazycake.shiro.RedisSessionDAO;
-import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,31 +31,20 @@ public class ShiroConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
-    @Bean
-    public SessionManager sessionManager(RedisSessionDAO redisSessionDAO) {
-        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-        sessionManager.setSessionDAO(redisSessionDAO);
-        return sessionManager;
-    }
-
     /**
      *  关联securityManager与ShiroFilterFactoryBean与ShiroFilterChainDefinition
      * @param accountRealm
-     * @param sessionManager
-     * @param redisCacheManager
      * @return
      */
     @Bean
-    public DefaultWebSecurityManager securityManager(AccountRealm accountRealm,
-                                                     SessionManager sessionManager,
-                                                     RedisCacheManager redisCacheManager) {
-        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager(accountRealm);
-        securityManager.setSessionManager(sessionManager);
-
-        // redis中针对不同用户缓存(此处的id需要对应user实体中的id字段,用于唯一标识)
-        redisCacheManager.setPrincipalIdFieldName("id");
-        securityManager.setCacheManager(redisCacheManager);
-
+    public DefaultWebSecurityManager securityManager(AccountRealm accountRealm) {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        //HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();
+        //matcher.setHashAlgorithmName("HmacSHA256");
+        //matcher.setHashIterations(1);
+        accountRealm.setCredentialsMatcher(new CustomCredentialsMatcher());
+        // 设置校验ram
+        securityManager.setRealm(accountRealm);
         /*
          * 关闭shiro自带的session，完全使用jwt校验
          */
@@ -72,6 +54,7 @@ public class ShiroConfig {
         subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
         securityManager.setSubjectDAO(subjectDAO);
 
+        ThreadContext.bind(securityManager);
         return securityManager;
     }
     @Bean("shiroFilterFactoryBean")

@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 
 @RestController
 public class AccountController {
@@ -37,8 +38,9 @@ public class AccountController {
         if (!user.getPassWord().equals(DigestUtils.md5Hex(loginDto.getPassWord()))){
             return new Result<>(400, "密码不正确");
         }
-
-        String jwt = jwtUtils.generateToken(user.getId());
+        HashMap<String, String> payload = new HashMap<>(16);
+        payload.put("id", user.getId().toString());
+        String jwt = jwtUtils.generateToken(payload);
         response.setHeader("Authorization", jwt);
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
 

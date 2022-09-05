@@ -1,18 +1,16 @@
-package com.likc.shiro.filter;
+package com.likc.shiro;
 
 
+import com.auth0.jwt.interfaces.Claim;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likc.common.lang.Result;
-import com.likc.shiro.JwtToken;
 import com.likc.util.JwtUtils;
-import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExpiredCredentialsException;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
-import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,6 +20,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @Author: likc
@@ -55,13 +54,15 @@ public class JwtFilter extends AuthenticatingFilter {
             return true;
         }else {
             // 校验jwt
-            Claims claim = jwtUtils.getClaimByToken(jwt);
-            if (claim == null || jwtUtils.isTokenExpired(claim.getExpiration())){
+            Map<String, Claim> claimMap = jwtUtils.getClaimByToken(jwt);
+            Claim claimUser = claimMap.get("id");
+            Claim claimExp = claimMap.get("exp");
+            if (claimUser.asString() == null || jwtUtils.isTokenExpired(claimExp.asDate())){
                 throw new ExpiredCredentialsException("token已失效，请重新登录");
             }
 
             // 去到createToken()生成jwt之后到AccountRealm的doGetAuthenticationInfo()作身份校验
-            return executeLogin(servletRequest,servletResponse);
+            return executeLogin(servletRequest, servletResponse);
         }
     }
 
