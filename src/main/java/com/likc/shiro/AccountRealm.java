@@ -55,8 +55,11 @@ public class AccountRealm extends AuthorizingRealm {
 
         Map<String, Claim> claimMap = jwtUtils.getClaimByToken((String) jwtToken.getPrincipal());
         String userId = claimMap.get("id").asString();
+        if (userId == null) {
+            throw new AuthenticationException("token用户信息为空！");
+        }
+        
         User user = userService.getById(Long.parseLong(userId));
-
         if (user == null){
             throw new UnknownAccountException("账户不存在");
         }
