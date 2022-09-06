@@ -55,9 +55,11 @@ public class JwtFilter extends AuthenticatingFilter {
         }else {
             // 校验jwt
             Map<String, Claim> claimMap = jwtUtils.getClaimByToken(jwt);
-            Claim claimUser = claimMap.get("id");
+            if (claimMap == null) {
+                throw new ExpiredCredentialsException("token有误");
+            }
             Claim claimExp = claimMap.get("exp");
-            if (claimUser.asString() == null || jwtUtils.isTokenExpired(claimExp.asDate())){
+            if (jwtUtils.isTokenExpired(claimExp.asDate())){
                 throw new ExpiredCredentialsException("token已失效，请重新登录");
             }
 
