@@ -39,9 +39,6 @@ public class ShiroConfig {
     @Bean
     public DefaultWebSecurityManager securityManager(AccountRealm accountRealm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        //HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();
-        //matcher.setHashAlgorithmName("HmacSHA256");
-        //matcher.setHashIterations(1);
         accountRealm.setCredentialsMatcher(new CustomCredentialsMatcher());
         // 设置校验ram
         securityManager.setRealm(accountRealm);

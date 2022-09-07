@@ -3,6 +3,7 @@ package com.likc.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -39,7 +40,7 @@ public class JwtUtils {
      * @param payloadClaims 在jwt中存储的一些非隐私信息
      * @return
      */
-    public String generateToken(HashMap<String, String> payloadClaims) {
+    public String createJwt(HashMap<String, String> payloadClaims) {
         long currentTimeMillis = System.currentTimeMillis();
         Date expireTime = new Date(System.currentTimeMillis() + expire * 1000 * 60);
         return JWT.create()
@@ -57,13 +58,12 @@ public class JwtUtils {
      * @param token
      * @return
      */
-    public Map<String, Claim> getClaimByToken(String token) {
+    public DecodedJWT verify(String token) {
         try {
             return JWT
                     .require(Algorithm.HMAC256(secret))
                     .build()
-                    .verify(token)
-                    .getClaims();
+                    .verify(token);
         } catch (Exception e) {
             log.error("解析token出错", e);
             return null;

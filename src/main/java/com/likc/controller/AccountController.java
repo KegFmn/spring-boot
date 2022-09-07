@@ -40,7 +40,7 @@ public class AccountController {
         }
         HashMap<String, String> payload = new HashMap<>(16);
         payload.put("id", user.getId().toString());
-        String jwt = jwtUtils.generateToken(payload);
+        String jwt = jwtUtils.createJwt(payload);
         response.setHeader("Authorization", jwt);
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
 

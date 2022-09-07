@@ -53,8 +53,7 @@ public class AccountRealm extends AuthorizingRealm {
 
         JwtToken jwtToken = (JwtToken)token;
 
-        Map<String, Claim> claimMap = jwtUtils.getClaimByToken((String) jwtToken.getPrincipal());
-        String userId = claimMap.get("id").asString();
+        String userId = jwtUtils.verify((String) jwtToken.getPrincipal()).getClaim("id").asString();
         User user = userService.getById(Long.parseLong(userId));
 
         if (user == null){
