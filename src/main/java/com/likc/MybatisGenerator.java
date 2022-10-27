@@ -17,10 +17,10 @@ import java.util.Collections;
  */
 public class MybatisGenerator {
     public static void main(String[] args) {
-        FastAutoGenerator.create("jdbc:mysql://localhost:3306/templateboot?serverTimezone=Asia/Shanghai", "root", "root")
+        FastAutoGenerator.create("jdbc:mysql://localhost:3306/vueblog?serverTimezone=Asia/Shanghai", "root", "root")
             .globalConfig(builder -> {
                 builder.author("likc") // 设置作者
-                        .enableSwagger() // 开启 swagger 模式
+                        //.enableSwagger() // 开启 swagger 模式
                         .fileOverride() // 覆盖已生成文件
                         .commentDate("yyyy-MM-dd")
                         .outputDir(System.getProperty("user.dir") + "/src/main/java"); // 指定输出目录
@@ -38,8 +38,8 @@ public class MybatisGenerator {
                         .pathInfo(Collections.singletonMap(OutputFile.mapperXml, System.getProperty("user.dir")+"/src/main/resources/mapper"));
             })
             .strategyConfig(builder -> {
-                builder.addInclude("t_user","t_student") // 设置需要生成的表名
-                        .addTablePrefix("t_", "c_") // 设置过滤表前缀
+                builder.addInclude("m_like") // 设置需要生成的表名
+                        .addTablePrefix("t_", "c_", "m_") // 设置过滤表前缀
 
                         //Mapper策略
                         .mapperBuilder()
@@ -48,7 +48,7 @@ public class MybatisGenerator {
                         .enableMapperAnnotation()       //开启 @Mapper 注解
                         .enableBaseResultMap() // 启用 BaseResultMap 生成。 // 会在mapper.xml文件生成[通用查询映射结果]配置。
                         .enableBaseColumnList() // 启用 BaseColumnList。  // 会在mapper.xml文件生成[通用查询结果列 ]配置
-                        .formatXmlFileName("%sXml") //格式化 Xml 文件名称
+                        .formatXmlFileName("%sMapper") //格式化 Xml 文件名称
 
                         // Service策略
                         .serviceBuilder()

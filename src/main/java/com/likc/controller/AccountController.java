@@ -9,6 +9,8 @@ import com.likc.util.JwtUtils;
 import com.likc.vo.LoginVo;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.ExpiredCredentialsException;
+import org.apache.shiro.authc.pam.UnsupportedTokenException;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 
@@ -55,6 +58,19 @@ public class AccountController {
     public Result<Object> logout(){
         SecurityUtils.getSubject().logout();
         return new Result<>(200, "请求成功");
+    }
+
+    @RequestMapping("/shiro")
+    public void expired(HttpServletRequest request) {
+        Object expired = request.getAttribute("expired");
+        if (expired != null) {
+            throw new ExpiredCredentialsException((String) expired);
+        }
+
+        Object unsupport = request.getAttribute("unsupport");
+        if (unsupport != null) {
+            throw new UnsupportedTokenException((String) unsupport);
+        }
     }
 
 }

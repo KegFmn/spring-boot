@@ -2,6 +2,7 @@ package com.likc.shiro;
 
 
 import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likc.common.lang.Result;
 import com.likc.util.JwtUtils;
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExpiredCredentialsException;
+import org.apache.shiro.authc.pam.UnsupportedTokenException;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -48,6 +51,7 @@ public class JwtFilter extends AuthenticatingFilter {
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
         log.info("----->请求拦截");
         HttpServletRequest request = (HttpServletRequest)servletRequest;
+        HttpServletResponse response = (HttpServletResponse)servletResponse;
         String jwt = request.getHeader("Authorization");
         // 当请求头的token为空，放行去Controller校验权限
         if (StringUtils.isEmpty(jwt)){
@@ -55,12 +59,16 @@ public class JwtFilter extends AuthenticatingFilter {
         }else {
             DecodedJWT decodedJWT = jwtUtils.verify(jwt);
             if (decodedJWT == null){
-                throw new UnsupportedTokenException("不明来历的token");
+                request.setAttribute("unsupport", "验证token异常");
+                request.getRequestDispatcher("/shiro").forward(request, response);
+                return false;
             }
 
             Date exp = decodedJWT.getClaim("exp").asDate();
             if (jwtUtils.isTokenExpired(exp)) {
-                throw new ExpiredCredentialsException("token已失效，请重新登录");
+                request.setAttribute("expired", "token已失效，请重新登录");
+                request.getRequestDispatcher("/shiro").forward(request, response);
+                return false;
             }
 
             // 去到createToken()生成jwt之后到AccountRealm的doGetAuthenticationInfo()作身份校验
