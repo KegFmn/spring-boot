@@ -9,10 +9,10 @@
         <relativePath/>
     </parent>
     <groupId>com.likc</groupId>
-    <artifactId>template-boot</artifactId>
+    <artifactId>spring-boot</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>template-boot</name>
-    <description>template-boot</description>
+    <name>spring-boot</name>
+    <description>spring-boot</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
