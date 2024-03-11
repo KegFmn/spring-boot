@@ -1,12 +1,16 @@
 package com.likc.filter;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likc.common.lang.LoginUser;
+import com.likc.common.lang.Result;
 import com.likc.mapper.RoleMapper;
 import com.likc.po.User;
 import com.likc.service.UserService;
 import com.likc.util.JwtUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -19,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -30,6 +35,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Resource
     private RoleMapper roleMapper;
+
+    @Resource
+    private ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
@@ -45,8 +53,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
         DecodedJWT verify = jwtUtils.verify(token);
         String userId = verify.getClaim("id").asString();
-
         User user = userService.lambdaQuery().eq(User::getId, userId).one();
+        if (Objects.isNull(user)) {
+            Result<Void> error = Result.error(401, "用户不存在");
+            String json = objectMapper.writeValueAsString(error);
+            httpServletResponse.setStatus(200);
+            httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+            httpServletResponse.getWriter().println(json);
+            return;
+        }
+
         List<String> perms = roleMapper.findPermsByUserId(user.getId());
         LoginUser loginUser = new LoginUser(user, perms);
 

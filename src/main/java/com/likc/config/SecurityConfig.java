@@ -1,13 +1,13 @@
 package com.likc.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.likc.common.security.CustomAccessDeniedHandler;
+import com.likc.common.security.CustomAuthenticationEntryPoint;
 import com.likc.filter.JwtFilter;
-import com.likc.common.lang.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -32,27 +32,20 @@ public class SecurityConfig {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors().and()
                 .csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint((request, response, authenticationException) -> {
-                    Result<Void> error = Result.error(401, "未授权");
-                    String json = objectMapper.writeValueAsString(error);
-                    response.setStatus(200);
-                    response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-                    response.getWriter().println(json);
-
-                })
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    Result<Void> error = Result.error(401, "没有权限");
-                    String json = objectMapper.writeValueAsString(error);
-                    response.setStatus(200);
-                    response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-                    response.getWriter().println(json);
-                })
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                .accessDeniedHandler(customAccessDeniedHandler)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/user/login").anonymous()
