@@ -1,4 +1,4 @@
-package com.likc.domain;
+package com.likc.common.lang;
 
 import com.likc.po.User;
 import lombok.AllArgsConstructor;

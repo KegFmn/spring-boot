@@ -1,17 +1,20 @@
 package com.likc.Interceptor;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.likc.domain.LoginUser;
+import com.likc.common.lang.LoginUser;
 import com.likc.mapper.RoleMapper;
 import com.likc.po.User;
 import com.likc.service.UserService;
 import com.likc.util.JwtUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
@@ -19,8 +22,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -33,6 +34,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Resource
     private RoleMapper roleMapper;
+
+
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver resolver;
 
 
     @Override
@@ -51,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String userId = verify.getClaim("id").asString();
 
         User user = userService.lambdaQuery().eq(User::getId, userId).one();
-        Assert.notNull(user, "用户未登录");
+        Assert.notNull(user, "用户不存在");
 
         List<String> perms = roleMapper.findPermsByUserId(user.getId());
         LoginUser loginUser = new LoginUser(user, perms);

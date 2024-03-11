@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = JWTVerificationException.class)
     public Result<Object> handler(JWTVerificationException e){
         log.error("JWT校验异常: ======================={}",e.getMessage());
-        return Result.error(401, e.getMessage());
+        return Result.error(403, e.getMessage());
     }
 
     /**

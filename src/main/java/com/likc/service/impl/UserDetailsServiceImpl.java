@@ -1,7 +1,7 @@
 package com.likc.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.likc.domain.LoginUser;
+import com.likc.common.lang.LoginUser;
 import com.likc.mapper.RoleMapper;
 import com.likc.mapper.UserMapper;
 import com.likc.po.User;
@@ -12,10 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

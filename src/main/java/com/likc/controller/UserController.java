@@ -1,7 +1,7 @@
 package com.likc.controller;
 
 
-import com.likc.domain.LoginUser;
+import com.likc.common.lang.LoginUser;
 import com.likc.dto.LoginDTO;
 import com.likc.common.lang.Result;
 import com.likc.po.User;

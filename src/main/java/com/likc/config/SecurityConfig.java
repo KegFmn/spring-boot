@@ -1,9 +1,12 @@
 package com.likc.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likc.Interceptor.JwtFilter;
+import com.likc.common.lang.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -15,6 +18,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author likc
  */
@@ -25,11 +31,31 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors()
                 .and()
                 .csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint((request,response,authenticationException)->{
+                    Result<Void> error = Result.error(401, "未授权");
+                    String json = objectMapper.writeValueAsString(error);
+                    response.setStatus(200);
+                    response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+                    response.getWriter().println(json);
+
+                })
+                .accessDeniedHandler((request,response,accessDeniedException)->{
+                    Result<Void> error = Result.error(401, "没有权限");
+                    String json = objectMapper.writeValueAsString(error);
+                    response.setStatus(200);
+                    response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+                    response.getWriter().println(json);
+                })
                 .and()
                 .authorizeRequests()
                 .antMatchers("/user/login").anonymous()
