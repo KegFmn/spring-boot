@@ -1,11 +1,12 @@
 package com.likc.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.likc.Interceptor.JwtFilter;
+import com.likc.filter.JwtFilter;
 import com.likc.common.lang.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -17,9 +18,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author likc
@@ -36,8 +34,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors()
-                .and()
+        http.cors().and()
                 .csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling()
@@ -62,12 +59,6 @@ public class SecurityConfig {
                 .anyRequest().authenticated();
 
 
-
-        //自定义权限拒绝处理类
-        // 无权访问 JSON 格式的数据
-//        http.exceptionHandling().accessDeniedHandler(ajaxAccessDeniedHandler);
-        // 登录验证
-//        http.addFilter(new TokenLoginFilter(authenticationManager(),redisUtils,logService,powerManagerMapper,powerManagerService)).httpBasic();
         // JWT Filter
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -75,7 +66,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/css/**","/js/**","/img/**","/uploads/**","**/favicon.ico");
+        return (web) -> web.ignoring().antMatchers(HttpMethod.GET,"/**/*.css","/**/*.js","/**/*.html");
     }
 
     @Bean

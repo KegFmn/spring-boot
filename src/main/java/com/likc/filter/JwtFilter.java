@@ -1,4 +1,4 @@
-package com.likc.Interceptor;
+package com.likc.filter;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.likc.common.lang.LoginUser;
@@ -7,16 +7,10 @@ import com.likc.po.User;
 import com.likc.service.UserService;
 import com.likc.util.JwtUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
@@ -25,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
