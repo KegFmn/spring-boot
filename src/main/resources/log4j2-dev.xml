@@ -6,9 +6,10 @@
     <Properties>
         <!-- 声明日志文件存储的目录 -->
         <Property name="LOG_HOME" value="logs" />
-        <Property name="FILE_NAME" value="log" />
+        <Property name="FILE_NAME" value="springBoot" />
         <Property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} -%-5p [%t]  %logger{36} : %msg%n" />
     </Properties>
+
     <Appenders>
         <!--输出控制台的配置-->
         <Console name="Console" target="SYSTEM_OUT">
@@ -33,12 +34,13 @@
 					之后的封存时间依次为08:00，12:00，16:00
 				-->
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-                <SizeBasedTriggeringPolicy size="5MB"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
             </Policies>
             <!-- 最多保留文件数 -->
             <DefaultRolloverStrategy max="30"/>
         </RollingFile>
     </Appenders>
+
     <!--然后定义Logger，只有定义了Logger并引入的Appender，Appender才会生效。Root中level配置了日志级别，可配置其他级别-->
     <Loggers>
         <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->

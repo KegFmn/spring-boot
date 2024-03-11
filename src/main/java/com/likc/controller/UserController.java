@@ -37,9 +37,6 @@ public class UserController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private JwtUtils jwtUtils;
 
     @PostMapping("/login")
