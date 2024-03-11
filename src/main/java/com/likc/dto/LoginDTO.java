@@ -1,4 +1,4 @@
-package com.likc.common.dto;
+package com.likc.dto;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Data
-public class LoginDto implements Serializable {
+public class LoginDTO implements Serializable {
 
     @NotBlank(message = "昵称不能为空")
     private String userName;

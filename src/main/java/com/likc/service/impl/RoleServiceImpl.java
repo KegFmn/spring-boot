@@ -1,8 +1,8 @@
 package com.likc.service.impl;
 
-import com.likc.po.User;
-import com.likc.mapper.UserMapper;
-import com.likc.service.UserService;
+import com.likc.po.Role;
+import com.likc.mapper.RoleMapper;
+import com.likc.service.RoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author likc
- * @since 2022-02-15
+ * @since 2024-03-11
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
 
 }

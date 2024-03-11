@@ -14,7 +14,4 @@ import org.springframework.scheduling.annotation.Async;
  */
 public interface UserService extends IService<User> {
 
-    @Async(value = "Executor")
-    void asyntest();
-
 }

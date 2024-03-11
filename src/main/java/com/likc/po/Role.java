@@ -1,18 +1,16 @@
 package com.likc.po;
 
-import com.baomidou.mybatisplus.annotation.*;
-
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 
 /**
  * <p>
@@ -20,34 +18,41 @@ import javax.validation.constraints.NotBlank;
  * </p>
  *
  * @author likc
- * @since 2022-02-15
+ * @since 2024-03-11
  */
 @Getter
 @Setter
 @Accessors(chain = true)
-@TableName("t_user")
-@ApiModel(value = "User对象", description = "")
-public class User implements Serializable {
+@TableName("t_role")
+public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("user_name")
-    private String userName;
+    /**
+     * 用户名
+     */
+    @TableField("name")
+    private String name;
 
-    @TableField("pass_word")
-    private String passWord;
-
+    /**
+     * 0.删除，1.未删除
+     */
     @TableField("is_deleted")
     @TableLogic
     private Integer isDeleted;
 
+    /**
+     * 创建时间
+     */
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
+    /**
+     * 更新时间
+     */
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
-
 }

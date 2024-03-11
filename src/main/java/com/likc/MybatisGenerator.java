@@ -1,6 +1,7 @@
 package com.likc;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
@@ -17,35 +18,32 @@ import java.util.Collections;
  */
 public class MybatisGenerator {
     public static void main(String[] args) {
-        FastAutoGenerator.create("jdbc:mysql://localhost:3306/vueblog?serverTimezone=Asia/Shanghai", "root", "root")
+        FastAutoGenerator.create("jdbc:mysql://192.168.31.30:3306/template_boot?serverTimezone=Asia/Shanghai", "root", "lkc8658759@!")
             .globalConfig(builder -> {
                 builder.author("likc") // 设置作者
                         //.enableSwagger() // 开启 swagger 模式
-                        .fileOverride() // 覆盖已生成文件
                         .commentDate("yyyy-MM-dd")
                         .outputDir(System.getProperty("user.dir") + "/src/main/java"); // 指定输出目录
             })
             .packageConfig(builder -> {
                 builder.parent("com") // 设置父包名
                         .moduleName("likc")  //设置父包模块名
-                        .entity("entity")   //entity实体类包名
+                        .entity("po")   //entity实体类包名
                         .service("service") //Service 包名
                         .serviceImpl("service.impl") // ***ServiceImpl 包名
                         .mapper("mapper")   //Mapper 包名
                         .xml("mapper.xml")  //Mapper XML 包名
                         .controller("controller") //Controller 包名
-                        .other("other") //自定义文件包名
-                        .pathInfo(Collections.singletonMap(OutputFile.mapperXml, System.getProperty("user.dir")+"/src/main/resources/mapper"));
+                        .pathInfo(Collections.singletonMap(OutputFile.xml, System.getProperty("user.dir")+"/src/main/resources/mapper"));
             })
             .strategyConfig(builder -> {
-                builder.addInclude("m_like") // 设置需要生成的表名
+                builder.addInclude("t_role_permission") // 设置需要生成的表名
                         .addTablePrefix("t_", "c_", "m_") // 设置过滤表前缀
 
                         //Mapper策略
                         .mapperBuilder()
                         .superClass(BaseMapper.class)   //设置父类
                         .formatMapperFileName("%sMapper")   //格式化 mapper 文件名称
-                        .enableMapperAnnotation()       //开启 @Mapper 注解
                         .enableBaseResultMap() // 启用 BaseResultMap 生成。 // 会在mapper.xml文件生成[通用查询映射结果]配置。
                         .enableBaseColumnList() // 启用 BaseColumnList。  // 会在mapper.xml文件生成[通用查询结果列 ]配置
                         .formatXmlFileName("%sMapper") //格式化 Xml 文件名称
@@ -70,7 +68,7 @@ public class MybatisGenerator {
                                 new Column("create_time", FieldFill.INSERT),
                                 new Column("update_time", FieldFill.INSERT_UPDATE)
                         )   //添加表字段填充，"create_time"字段自动填充为插入时间，"update_time"字段自动填充为插入修改时间
-                        // .idType(IdType.AUTO) // 全局主键类型。  //如果MySQL主键设置为自增，则不需要设置此项。
+                         .idType(IdType.AUTO) // 全局主键类型。  //如果MySQL主键设置为自增，则不需要设置此项。
 
                         // Controller策略配置
                         .controllerBuilder()

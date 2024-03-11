@@ -14,11 +14,8 @@ maven依赖:
     springboot-test
     spring-boot-devtools
     Apache-commons-lang
-    Alibaba-druid
 
 Swagger3:   http://localhost:8082/swagger-ui/#/
 
 Knife4j:    http://localhost:8082/doc.html
-
-Druid: http://localhost:8082/druid/index.html
 

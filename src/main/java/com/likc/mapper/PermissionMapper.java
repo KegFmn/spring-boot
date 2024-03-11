@@ -1,8 +1,7 @@
 package com.likc.mapper;
 
-import com.likc.po.User;
+import com.likc.po.Permission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -10,8 +9,8 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author likc
- * @since 2022-02-15
+ * @since 2024-03-11
  */
-public interface UserMapper extends BaseMapper<User> {
+public interface PermissionMapper extends BaseMapper<Permission> {
 
 }

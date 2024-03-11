@@ -13,11 +13,6 @@ import lombok.Setter;
 @Setter
 public class LoginVo {
 
-    private Long id;
-
     private String userName;
 
-    private String avatar;
-
-    private String email;
 }
