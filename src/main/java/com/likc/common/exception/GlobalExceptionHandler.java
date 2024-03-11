@@ -44,13 +44,6 @@ public class GlobalExceptionHandler {
         return Result.error(400, e.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(value = JWTVerificationException.class)
-    public Result<Object> handler(JWTVerificationException e){
-        log.error("JWT校验异常: ======================={}",e.getMessage());
-        return Result.error(403, e.getMessage());
-    }
-
     /**
      * 搭配@Validated和Valid校验前端参数
      * @param e
