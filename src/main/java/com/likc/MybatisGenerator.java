@@ -18,7 +18,7 @@ import java.util.Collections;
  */
 public class MybatisGenerator {
     public static void main(String[] args) {
-        FastAutoGenerator.create("jdbc:mysql://192.168.31.30:3306/template_boot?serverTimezone=Asia/Shanghai", "root", "lkc8658759@!")
+        FastAutoGenerator.create("jdbc:mysql://192.168.31.30:3306/spring_boot?serverTimezone=Asia/Shanghai", "root", "lkc8658759@!")
             .globalConfig(builder -> {
                 builder.author("likc") // 设置作者
                         //.enableSwagger() // 开启 swagger 模式
