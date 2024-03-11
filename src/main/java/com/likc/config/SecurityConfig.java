@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint((request,response,authenticationException)->{
+                .authenticationEntryPoint((request, response, authenticationException) -> {
                     Result<Void> error = Result.error(401, "未授权");
                     String json = objectMapper.writeValueAsString(error);
                     response.setStatus(200);
@@ -49,7 +49,7 @@ public class SecurityConfig {
                     response.getWriter().println(json);
 
                 })
-                .accessDeniedHandler((request,response,accessDeniedException)->{
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
                     Result<Void> error = Result.error(401, "没有权限");
                     String json = objectMapper.writeValueAsString(error);
                     response.setStatus(200);
